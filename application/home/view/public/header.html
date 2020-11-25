@@ -1,0 +1,73 @@
+<!-- Header -->
+<header class="main-header " id="header">
+  <nav class="navbar navbar-static-top navbar-expand-lg">
+    <!-- Sidebar toggle button -->
+    <button id="sidebar-toggler" class="sidebar-toggle">
+    </button>
+    <!-- search form -->
+    <div class="search-form d-none d-lg-inline-block" style="color: #0f0f0f">
+      <?php if(!empty($user['remark'])){ ?>
+      <h3>{$user.remark}</h3>
+      <?php }else{ ?>
+      <h3>没个性，不签名</h3>
+      <?php } ?>
+    </div>
+
+    <div class="navbar-right ">
+      <ul class="nav navbar-nav">
+        <!-- Github Link Button -->
+        <li class="dropdown notifications-menu" style="color: #0f0f0f">
+
+          <h4>{$user.tell}</h4>
+
+        </li>
+        <!-- User Account -->
+        <li class="dropdown user-menu">
+          <button href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <img src="__ROOT__{$user.photo}" class="user-image" alt="User Image" />
+            <span class="d-none d-lg-inline-block">{$user.username}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <!-- User image -->
+            <li class="dropdown-header">
+              <img src="__ROOT__{$user.photo}" class="img-circle" alt="User Image" />
+              <div class="d-inline-block">
+                {$user.username} <small class="pt-1">{$user.email}</small>
+              </div>
+            </li>
+
+
+            <li>
+            <a href="">
+              <i class="mdi mdi-account"></i> {$user.remark}
+            </a>
+          </li>
+
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+</header>
+
+<script src="/menu/assets/plugins/jquery/jquery.min.js"></script>
+<script src="/menu/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/menu/assets/plugins/toaster/toastr.min.js"></script>
+<script src="/menu/assets/plugins/slimscrollbar/jquery.slimscroll.min.js"></script>
+<script src="/menu/assets/plugins/charts/Chart.min.js"></script>
+<script src="/menu/assets/plugins/ladda/spin.min.js"></script>
+<script src="/menu/assets/plugins/ladda/ladda.min.js"></script>
+<script src="/menu/assets/plugins/jquery-mask-input/jquery.mask.min.js"></script>
+<script src="/menu/assets/plugins/select2/js/select2.min.js"></script>
+<script src="/menu/assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.js"></script>
+<script src="/menu/assets/plugins/jvectormap/jquery-jvectormap-world-mill.js"></script>
+<script src="/menu/assets/plugins/daterangepicker/moment.min.js"></script>
+<script src="/menu/assets/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/menu/assets/plugins/jekyll-search.min.js"></script>
+<script src="/menu/assets/js/sleek.js"></script>
+<script src="/menu/assets/js/chart.js"></script>
+<script src="/menu/assets/js/date-range.js"></script>
+<script src="/menu/assets/js/map.js"></script>
+<script src="/menu/assets/js/custom.js"></script>

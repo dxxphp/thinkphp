@@ -1,0 +1,556 @@
+{include file="public/menu" /}
+
+
+<body class="header-fixed sidebar-fixed sidebar-dark header-light" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+    <style>
+
+        .pages{float: right}
+        .pages a,.pages span {
+            display:inline-block;
+            padding:20px 20px;
+            border:1px solid #f0f0f0;
+            -webkit-border-radius:3px;
+            -moz-border-radius:3px;
+            border-radius:30px;
+            font-size: 14px;
+        }
+        .pages a,.pages li {
+
+            display:inline-block;
+            list-style: none;
+            text-decoration:none; color:#58A0D3;
+        }
+        .pages a.first,.pages a.prev,.pages a.next,.pages a.end{
+            margin:0 auto;
+        }
+        .pages a:hover{
+            border-color:#50A8E6;
+        }
+        .pages span.current{
+            background:#50A8E6;
+            color:#FFF;
+            font-weight:700;
+            border-color:#50A8E6;
+        }
+
+    </style>
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+        <!-- Header -->
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="breadcrumb-wrapper">
+
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb p-0">
+                            <li class="breadcrumb-item">  </li>
+
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/product/index')}">产品列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/shop/shop')}">购物车列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/order/show')}">订单列表</a>
+                            </li>
+                        </ol>
+                    </nav>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Recent Order Table -->
+                        <div class="card card-table-border-none" id="recent-orders">
+                            <form>
+                                <div class="card-header justify-content-between">
+                                    <h2>购物车</h2>
+                                    <div >
+
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+
+                                    </div>
+                                    <div >
+                                    </div>
+                                    <div >
+                                    </div>
+                                    <div >
+                                    </div>
+
+                                </div>
+                            </form>
+                            <div class="card-body pt-0 pb-5">
+                                <table class="table table-striped" style="width:100%">
+                                    <thead>
+                                    <tr style="color: #0e121f;">
+                                        <th style="color: #0e121f;WORD-WARP:break-word" >ID</th>
+                                        <th style="color: #0e121f;WORD-WARP:break-word" >名称</th>
+                                        <th style="color: #0e121f;WORD-WARP:break-word" >品牌</th>
+                                        <th style="color: #0e121f;">单价</th>
+                                        <th style="color: #0e121f;">批发价</th>
+                                        <th style="color: #0e121f;">现售价</th>
+                                        <th style="color: #0e121f;">现批价</th>
+                                        <th style="color: #0e121f;">数量</th>
+                                        <th style="color: #0e121f;">采购总价</th>
+                                        <th style="color: #0e121f;">出售总价</th>
+                                        <th style="color: #0e121f;">利润</th>
+                                        <th style="color: #0e121f;">创建时间</th>
+                                        <th ></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+
+                                        {foreach name="data" item="val"}
+                                    <tr>
+
+                                        <td>
+                                            <input type="hidden" value="{$val.id}" class="input-s input-w input-hs">
+                                            {$val.id}
+                                        </td>
+                                        <td style="color: #0e121f;" >{$val.name}</td>
+                                        <td style="color: #0e121f;" >
+
+                                            <?php if(!empty($classData[$val['class_id']]['classname'])) { ?>
+                                            <?= $classData[$val['class_id']]['classname']; ?>
+                                            <?php }else{ ?>
+                                            暂无分类
+                                            <?php } ?>
+
+                                        </td>
+
+                                        <td style="color: #0e121f;" class="canChangeOne" id="{$val.id}" >{$val.purchase}</td>
+                                        <td style="color: #0e121f;" class="canChangetwo" id="{$val.id}">{$val.new_purchase}</td>
+                                        <td style="color: #0e121f;" class="canChangeThree" id="{$val.id}">{$val.price}</td>
+                                        <td style="color: #0e121f;" class="canChangeFour" id="{$val.id}">{$val.new_price}</td>
+                                        <td style="color: #0e121f;" class="canChangeNum" id="{$val.id}">{$val.num}</td>
+                                        <td style="color: black">{$val.total_purchase}</td>
+                                        <td style="color: black">{$val.total_price}</td>
+                                        <td style="color: black">{$val.profit} ¥</td>
+                                        <td style="color: #0e121f;" >{$val.creat_time|date="Y-m-d H:i:s",###}</td>
+
+                                        <td style="color: #0e121f;"     class="text-right">
+                                            <div class="dropdown show d-inline-block widget-dropdown">
+                                                <a class="dropdown-toggle icon-burger-mini" href="" role="button" id="dropdown-recent-order1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
+                                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-recent-order1">
+                                                    <li class="dropdown-item">
+                                                        <a href="javascript:return false;" onclick="delRelation('{$val.id}')" class="delads">删除</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    {/foreach}
+
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <?php if($total_purchase == 0 and $new_total_price == 0) { ?>
+
+                                <?php } else { ?>
+
+                                    <div>
+                                        <div style="color: black;margin-left:55%;">
+
+                                            <h6>
+                                                采购总计：<span style="color: red">
+                                                <input type="hidden" id="total_purchase" value="{$total_purchase}">
+                                                {$total_purchase} ¥</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                销售总计：<span style="color: red">
+                                                <input type="hidden" id="new_total_price" value="{$new_total_price}">
+                                                {$new_total_price} ¥</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                总计利润：<span style="color: red">
+                                              <input type="hidden" id="profit" value="{$new_total_price-$total_purchase}">
+
+                                                {$new_total_price-$total_purchase} ¥ </span>
+                                            </h6>
+                                        </div>
+
+                                        <br><div style="color: black;margin-left:85%;">
+                                        <span style="font-size: 15px">供货商：</span>
+                                        <input type="text" name="supshop" id="supshop" value=""><br><br>
+                                        <span style="font-size: 15px">手机号：</span>
+                                        <input type="text" name="iphone" id="iphone" value="">
+                                    </div>
+                                        <br><div style="color: black;margin-left:84%;">
+                                        <span style="font-size: 15px">客户名称：</span>
+                                        <input type="text" name="username" id="username" value=""><br><br>
+
+                                        <span style="font-size: 15px">客户手机：</span>
+                                        <input type="text" name="user_iphone" id="user_iphone" value=""><br><br>
+
+                                    </div>
+                                        <div style="color: black;margin-left: 80%;">
+                                            <span style="font-size: 15px">客户地址：</span>
+                                            <input style="width:215px;"   type="text" name="address" id="address" value="">
+                                        </div>
+                                        <br>
+                                        <div style="margin-left:90%;">
+                                            <button class="btn btn-primary" onclick="creatShop()">生成订单</button>
+                                        </div>
+                                    </div>
+
+                                <?php } ?>
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+
+    //创建订单
+    function creatShop(  ){
+
+      var supshop = $('#supshop').val();
+      var iphone = $('#iphone').val();
+      var username = $('#username').val();
+      var user_iphone = $('#user_iphone').val();
+      var address = $('#address').val();
+      var total_purchase = $('#total_purchase').val();
+      var new_total_price = $('#new_total_price').val();
+      var profit = $('#profit').val();
+
+         if(supshop == ''){
+             alert('请输入供应商！');return
+         }
+         if(iphone == '') {
+             alert('请输入供应商手机号！');return
+         }
+        if(username == '') {
+            alert('请输入客户名称！');return
+        }
+        if(user_iphone == '') {
+            alert('请输入客户手机号！');return
+        }
+        if(address == '') {
+            alert('请输入客户地址！');return
+        }
+
+        var trList = $("#tbody").children("tr");
+        var array = '';
+
+        for (var i=0;i<trList.length;i++) {
+
+            var tdArr = trList.eq(i).find("td");
+             array += tdArr.eq(0).find('input').val()+ ",";
+
+        }
+            $.ajax({
+                type: "POST",
+                url: "{:url('home/order/orderAdd')}",
+                data: {
+                    'supshop' : supshop ,
+                    'iphone' : iphone ,
+                    'username' : username ,
+                    'user_iphone' : user_iphone ,
+                    'address' : address ,
+                    'array' : array,
+                    'total_purchase' : total_purchase,
+                    'new_total_price' : new_total_price,
+                    'profit' : profit,
+                },  // 等号前后不要加空格
+                success: function(msg){  //请求成功后的回调函数
+                    alert(msg);
+                    location.replace(location)
+                }
+
+            });
+    }
+
+    //页面修改js
+    $(document).ready(function(){
+        td_Click();
+    })
+
+    function td_Click() {
+        $(".canChangeOne").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:40px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/shop/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 1},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                        location.replace(location)
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+
+        $(".canChangetwo").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:40px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/shop/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 2},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                        location.replace(location)
+
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+        $(".canChangeThree").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:40px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/shop/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 3},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                        location.replace(location)
+
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+        $(".canChangeFour").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:40px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/shop/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 4},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                        location.replace(location)
+                    }
+
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+
+        $(".canChangeNum").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:40px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/shop/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 5},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                        location.replace(location)
+
+                    }
+
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+    }
+
+    //删除操作
+    function delRelation( id ){
+        var id = id;
+        if (id == '') {
+            alert("操作失败！");return false;
+        }
+        $.ajax({
+            type: "GET",
+            url: "{:url('home/shop/update')}",
+            data: { 'id' : id , 'status' : 2 },  // 等号前后不要加空格
+            success: function(msg){  //请求成功后的回调函数
+                alert(msg);
+                location.replace(location)
+            }
+
+        });
+    }
+
+
+</script>

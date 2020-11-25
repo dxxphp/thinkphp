@@ -1,0 +1,173 @@
+{include file="public/menu" /}
+
+
+<body class="sidebar-fixed sidebar-dark header-light header-fixed" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="breadcrumb-wrapper">
+
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb p-0">
+                            <li class="breadcrumb-item">  </li>
+                            <li class="breadcrumb-item" aria-current="page"><a href="{:url('home/pay/add')}">添加收支</a></li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/pay/index')}">收支列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/pay/payBin')}">收支回收站</a>
+                            </li>
+                        </ol>
+                    </nav>
+
+            </div>
+                <!-- Top Statistics -->
+                <div class="row">
+                    <div class="col-lg-6 content">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>输入收支信息</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="{:url('home/pay/edit')}?id={$data.id}"   method="post">
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer01">名称</label>
+                                            <input type="text" class="form-control" id="validationServer01" placeholder="请输入名称" name="username" value="{$data.username}" required>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer02">分类</label>
+                                            <select class="form-control" name="class" id="validationServer02" required>
+                                                <?php if(!empty($classData[$data['class']]['classname'])) { ?>
+                                                <option value="<?php echo $classData[$data['class']]['id']?>">
+                                                    <?php echo  $classData[$data['class']]['classname'];?>
+                                                </option>
+
+                                                {foreach name="classData" item="value"}
+                                                <option value ="{$value.id}">{$value.classname}</option>
+                                                {/foreach}
+
+                                                <?php }else{ ?>
+                                                <option value="">请选择</option>
+                                                <?php } ?>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer02">类型</label>
+                                            <select class="form-control" name="pay_cate" id="validationServer03" required>
+
+
+                                                <?php if(!empty($payData[$data['pay_cate']]['pay_name'])) { ?>
+                                                <option value="<?php echo $payData[$data['pay_cate']]['id']?>">
+                                                    <?php echo  $payData[$data['pay_cate']]['pay_name'];?>
+                                                </option>
+
+                                                {foreach name="payData" item="value"}
+                                                <option value ="{$value.id}">{$value.pay_name}</option>
+                                                {/foreach}
+
+                                                <?php }else{ ?>
+                                                <option value="">请选择</option>
+                                                <?php } ?>
+
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer02">渠道</label>
+                                            <select class="form-control" name="pay_mode" id="validationServer04" required>
+
+                                                <?php if(!empty($payMode[$data['pay_mode']]['pay_mode'])) { ?>
+                                                <option value="<?php echo $payMode[$data['pay_mode']]['id']?>">
+                                                    <?php echo  $payMode[$data['pay_mode']]['pay_mode'];?>
+                                                </option>
+
+                                                {foreach name="payMode" item="value"}
+                                                <option value ="{$value.id}">{$value.pay_mode}</option>
+                                                {/foreach}
+
+                                                <?php }else{ ?>
+                                                <option value="">请选择</option>
+                                                <?php } ?>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServerUsername">数量</label>
+                                            <input type="text" class="form-control price"  value="{$data.number}"  name="number" placeholder="请输入数量" aria-describedby="inputGroupPrepend3" required>
+
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServerUsername">金额</label>
+                                            <input type="text" class="form-control price" value="{$data.price}"  name="price" placeholder="请输入金额" aria-describedby="inputGroupPrepend3" required>
+
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServerUsername">时间</label>
+
+                                            <input  class="form-control"  name="usetime" id="usetime" type="date" value="{$data.usetime|date='Y-m-d',###}" required>
+
+                                        </div>
+
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServerUsername">备注</label>
+                                            <textarea  class="form-control"  name="remark" id="validationServerUsername" placeholder="" aria-describedby="inputGroupPrepend3"> {$data.remark}</textarea>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">提交表单</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    //输入金额验证
+    $(".price").keyup(function () {
+        var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+        var txt = '';
+        if (reg != null) {
+            txt = reg[0];
+        }
+        $(this).val(txt);
+    }).change(function () {
+        $(this).keypress();
+        var v = $(this).val();
+        if (/\.$/.test(v))
+        {
+            $(this).val(v.substr(0, v.length - 1));
+        }
+    });
+
+</script>

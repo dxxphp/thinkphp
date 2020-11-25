@@ -1,0 +1,85 @@
+{include file="public/menu" /}
+
+
+<body class="sidebar-fixed sidebar-dark header-light header-fixed" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">							<div class="breadcrumb-wrapper">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item">  </li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{:url('home/cate/add')}">添加分类</a></li>
+
+
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/cate/index')}">分类列表</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/cate/cateBin')}">分类回收站</a>
+                        </li>
+                    </ol>
+                </nav>
+
+            </div>
+                <!-- Top Statistics -->
+                <div class="row">
+                    <div class="col-lg-6 content">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>输入物品信息</h2>
+                            </div>
+                            <div class="card-body">
+                                <form action="{:url('home/cate/edit')}?id={$data.id}"  method="post">
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer01">分类名称</label>
+                                            <input type="text" class="form-control" id="validationServer01" placeholder="请输入分类名称" name="classname" value="{$data.classname}" required>
+
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer02">选择模块</label>
+                                            <select class="form-control" name="diff" id="validationServer02" required>
+                                                <option value="<?php echo $classData[$data['diff']]['id']?>">
+                                                    <?php echo  $classData[$data['diff']]['name'];?>
+                                                </option>
+
+                                                {foreach name="classData" item="value"}
+                                                <option value ="{$value.id}">{$value.name}</option>
+                                                {/foreach}
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">提交表单</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

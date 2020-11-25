@@ -1,0 +1,203 @@
+{include file="public/menu" /}
+
+
+<body class="sidebar-fixed sidebar-dark header-light header-fixed" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="breadcrumb-wrapper">
+
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb p-0">
+                            <li class="breadcrumb-item">  </li>
+                            <li class="breadcrumb-item" aria-current="page"><a href="{:url('home/wechatuser/add')}">添加客户</a></li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/wechatuser/showlist')}">微信好友列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/wechatuser/show')}">客户列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/wechatuser/userStart')}">客户申请好友列表</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/wechatuser/usergo')}">客户待审核列表</a>
+                            </li>
+
+                            <li class="breadcrumb-item">
+                                <a href="{:url('home/wechatuser/userbin')}">客户回收站</a>
+                            </li>
+                        </ol>
+                    </nav>
+            </div>
+                <!-- Top Statistics -->
+                <div class="row">
+                    <div class="col-lg-4 content">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>输入微信客户信息</h2>
+                            </div>
+                            <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServer01">客户名称</label>
+                                            <input type="text" class="form-control" id="validationServer01" placeholder="请输入客户名称" name="name" value="{$data.name}" >
+
+                                        </div> <div class="col-md-12 mb-3">
+                                        <label for="validationServer01">客户微信</label>
+                                        <input type="text" class="form-control"  placeholder="请输入客户微信" name="WeChat" value="{$data.WeChat}" required>
+
+                                    </div> <div class="col-md-12 mb-3">
+                                        <label for="validationServer01">手机号</label>
+                                        <input type="text" class="form-control price"  placeholder="请输入客户手机号" name="iphone" value="{$data.iphone}" >
+
+                                    </div> <div class="col-md-12 mb-3">
+                                        <label for="validationServer01">客户性别</label>
+                                        <input type="text" class="form-control" placeholder="请输入客户性别" name="sex" value="{$data.sex}" >
+
+                                    </div>
+
+                                        <div class="col-md-12 mb-3">
+                                        <label for="validationServer01">状态</label>
+                                            <select class="form-control" name="status" id="selector" >
+
+                                                {foreach name="getStatus" item="value"}
+                                                <option value ="{$value.id}"  {if $value.id==$data.status} selected {/if} >{$value.name}</option>
+                                                {/foreach}
+
+
+
+                                            </select>
+
+                                    </div> <div class="col-md-12 mb-3">
+                                        <label for="validationServer01">备注</label>
+                                        <input type="text" class="form-control"  placeholder="备注" name="remarks" value="{$data.remarks}" >
+
+                                    </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="validationServerUsername">地址</label>
+                                            <textarea id="validationServerUsername" class="form-control"  name="address"  placeholder="" aria-describedby="inputGroupPrepend3">{$data.address}</textarea>
+                                        </div>
+
+
+                                    </div>
+                                <input type="hidden"  name="id" value="{$data.id}" >
+
+                                <button class="btn btn-primary" id="ajax">提交表单</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 content">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>原图识别信息</h2>
+                            </div>
+                            <div class="card-body">
+
+                                <textarea rows=31   name=s1   cols=27 class="form-control"   placeholder="" aria-describedby="inputGroupPrepend3"><?php print_r( json_decode($data['result'], true)) ?> </textarea>
+
+
+
+                            </div>
+                        </div>
+
+                    </div> <div class="col-lg-4 content">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>微信原图</h2>
+                            </div>
+                            <div class="card-body">
+                                <?php if(!empty($data['photo'])) { ?>
+                                <img style="width: 320px;height: 600px;" src="__ROOT__{$data.photo}" alt="">
+                                <?php } else { ?>
+
+                                <img class="card-img-top" style="width: 320px;height: 580px;" src=" __ROOT__/uploads/error.jpg">
+
+                                <?php } ?>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $('#ajax').on("click",function(){
+        var  id =  $("input[name='id']").val();
+        var  name =  $("input[name='name']").val();
+        var  WeChat =  $("input[name='WeChat']").val();
+        var  status =  $("#selector").find("option:selected").val();
+
+
+        if(name == ''){
+            alert('客户名称不能为空');return
+        }
+        var data = {
+            id :   id,
+            name :   name,
+            WeChat :   WeChat,
+            iphone :   $("input[name='iphone']").val(),
+            sex :   $("input[name='sex']").val(),
+            status :   status,
+            remarks :   $("input[name='remarks']").val(),
+            address :   $("#validationServerUsername").val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{:url('home/wechatuser/editpost')}",
+            data: data,  // 等号前后不要加空格
+            success: function(msg){  //请求成功后的回调函数
+                alert(msg);
+                location.replace(location)
+            }
+        });
+
+
+    });
+
+    //输入金额验证
+    $(".price").keyup(function () {
+        var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+        var txt = '';
+        if (reg != null) {
+            txt = reg[0];
+        }
+        $(this).val(txt);
+    }).change(function () {
+        $(this).keypress();
+        var v = $(this).val();
+        if (/\.$/.test(v))
+        {
+            $(this).val(v.substr(0, v.length - 1));
+        }
+    });
+
+</script>

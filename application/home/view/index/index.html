@@ -1,0 +1,637 @@
+{include file="public/menu" /}
+
+<script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+<script src="hhttps://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/drilldown.js"></script>
+<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+<body class="sidebar-fixed sidebar-dark header-light header-fixed" id="body">
+
+<script src="https://code.highcharts.com.cn/jquery/jquery-1.8.3.min.js"></script>
+
+
+<script src="https://code.highcharts.com.cn/highcharts/highcharts-more.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/highcharts-3d.js"></script>
+
+
+
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">
+                <!-- Top Statistics -->
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                       <a href="{:url('home/index/goods')}">
+                           <div class="media widget-media p-4 bg-white border">
+                               <div class="icon rounded-circle mr-4 bg-primary">
+                                   <i class="text-white">物品</i>
+                               </div>
+                               <div class="media-body align-self-center">
+                                   总数：<h4 class="text-primary mb-2">{$goodNum}</h4>
+                                   总金额：<h4 class="text-primary mb-2">{$goodPrice}/¥</h4>
+                               </div>
+                           </div>
+
+                       </a>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <a href="{:url('home/invoice/index')}">
+                            <div class="media widget-media p-4 bg-white border">
+                                <div class="icon rounded-circle bg-warning mr-4">
+                                    <i class="text-white">小票</i>
+                                </div>
+                                <div class="media-body align-self-center">
+                                    总数：<h4 class="text-primary mb-2">{$invoiceNum}</h4>
+                                    总金额：<h4 class="text-primary mb-2">{$invoicePrice}/¥</h4>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <a href="{:url('home/pay/index')}">
+                        <div class="media widget-media p-4 bg-white border">
+                            <div class="icon rounded-circle mr-4 bg-danger">
+                                <i class="text-white">收入</i>
+                            </div>
+                            <div class="media-body align-self-center">
+                                总数：<h4 class="text-primary mb-2">{$payShouNum}</h4>
+                                总金额：<h4 class="text-primary mb-2">{$payShou}/¥</h4>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <a href="{:url('home/pay/index')}">
+                        <div class="media widget-media p-4 bg-white border">
+                            <div class="icon bg-success rounded-circle mr-4">
+                                <i class="text-white">支出</i>
+                            </div>
+                            <div class="media-body align-self-center">
+                                总数：<h4 class="text-primary mb-2">{$payZhiNum}</h4>
+                                总金额：<h4 class="text-primary mb-2">{$payZhi}/¥</h4>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="media widget-media p-4 bg-white border">
+
+                            <div class="media-body align-self-center">
+                                用户页面PV<h4 class=" text-primary mb-2">{$getPv['user']}</h4>
+                                统计主页PV<h4 class="text-primary mb-2">{$getPv['index']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                物品添加PV<h4 class="text-primary mb-2">{$getPv['goodsAdd']}</h4>
+                                物品编辑PV<h4 class="text-primary mb-2">{$getPv['goodsEdit']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                物品列表PV<h4 class="text-primary mb-2">{$getPv['goodList']}</h4>
+                                物品回收站PV<h4 class="text-primary mb-2">{$getPv['goodsBin']}</h4>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="media widget-media p-4 bg-white border">
+                            <div class="media-body align-self-center">
+                                小票添加PV<h4 class="text-primary mb-2">{$getPv['invoiceAdd']}</h4>
+                                小票编辑PV<h4 class="text-primary mb-2">{$getPv['invoiceEdit']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                小票列表PV<h4 class="text-primary mb-2">{$getPv['invoiceList']}</h4>
+                                小票回收站PV<h4 class="text-primary mb-2">{$getPv['invoiceBin']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                小票图片PV<h4 class="text-primary mb-2">{$getPv['invoicePhoto']}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="media widget-media p-4 bg-white border">
+
+                            <div class="media-body align-self-center">
+                                收支添加PV<h4 class="text-primary mb-2">{$getPv['payAdd']}</h4>
+                                收支编辑PV<h4 class="text-primary mb-2">{$getPv['payEdit']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                收支列表PV<h4 class="text-primary mb-2">{$getPv['payList']}</h4>
+                                收支回收站PV<h4 class="text-primary mb-2">{$getPv['payBin']}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="media widget-media p-4 bg-white border">
+
+                            <div class="media-body align-self-center">
+                                分类添加PV<h4 class="text-primary mb-2">{$getPv['cateAdd']}</h4>
+                                分类编辑PV<h4 class="text-primary mb-2">{$getPv['cateEdit']}</h4>
+                            </div>
+                            <div class="media-body align-self-center">
+                                分类列表PV<h4 class="text-primary mb-2">{$getPv['cateList']}</h4>
+                                分类回收站PV<h4 class="text-primary mb-2">{$getPv['cateBin']}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                    </div>
+
+                <div class="row">
+                    <div class="col-xl-8 col-md-12">
+                        <!-- Sales Graph -->
+                        <div class="card card-default" data-scroll-height="675">
+                            <div class="card-header">
+                                <h2>收支折线图</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="containersds" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-12">
+                        <!-- Notification Table -->
+                        <div class="card card-default" data-scroll-height="550">
+
+                            <div id="containerFour" style=" height: 480px; "></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-8 col-md-12">
+                        <!-- Sales Graph -->
+                        <div class="card card-default" data-scroll-height="675">
+                            <div class="card-header">
+                                <h2>收支条形图</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="containerYuan" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-12">
+                        <!-- Notification Table -->
+                        <div class="card card-default" data-scroll-height="550">
+
+                            <div id="containerThree" style="height: 480px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-xl-8 col-md-12">
+                        <!-- Sales Graph -->
+                        <div class="card card-default" data-scroll-height="675">
+                            <div class="card-header">
+                                <h2>占比柱状图</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="container" style="min-width: 300px; height: 300px; margin: 0 auto"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-12">
+                        <!-- Doughnut Chart -->
+                        <div class="card card-default">
+
+                                <div id="containerOne" style="height: 480px;"></div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-xl-8 col-md-12">
+                        <!-- Sales Graph -->
+                        <div class="card card-default" data-scroll-height="675">
+                            <div class="card-header">
+                                <h2>金额柱状图</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="containerPrice" style="min-width: 300px; height: 300px; margin: 0 auto"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-6 col-12">
+                        <!-- Top Sell Table -->
+                        <div class="card card-table-border-none" data-scroll-height="550">
+
+                            <div id="containerTwo" style="height: 480px;"></div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+</body>
+</html>
+<script>
+
+    var dataStr ={$Histogram};
+    var temStr ={$HistogramGroup};
+    var Histogram_Two ={$Histogram_Two};
+    var HistogramGroup_Two ={$HistogramGroup_Two};
+
+//柱状图1
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '各模块金额的总份额百分比'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: '总的份额'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}%'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px"></span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> <br/>'
+        },
+        series: [{
+            name: '模块',
+            colorByPoint: true,
+            data: dataStr
+        }],
+        drilldown: {
+            series: temStr
+        }
+    });
+
+    //柱状图2
+    Highcharts.chart('containerPrice', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '各模块金额占有率'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: '金额'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}/¥'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px"></span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}/¥</b> <br/>'
+        },
+        series: [{
+            name: '模块',
+            colorByPoint: true,
+            data: Histogram_Two
+        }],
+        drilldown: {
+            series: HistogramGroup_Two
+        }
+    });
+
+</script>
+
+<script>
+
+    //饼状图 1物品
+    var newGoodsGroup ={$HistogramOne}
+
+    Highcharts.chart('containerOne', {
+        title: {
+            text: '物品模块分类占比'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '占比',
+            data: newGoodsGroup
+        }]
+    });
+
+
+</script>
+
+<script>
+    //饼状图 2小票
+    var newInvoiceGroup ={$HistogramTwo}
+
+    var chart = Highcharts.chart('containerTwo', {
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: '小票模块分类占比'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    enabled: true,
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '占比',
+            data: newInvoiceGroup
+        }]
+    });
+</script>
+
+<script>
+
+
+    //饼状图 3收入
+    var newShouGroup ={$HistogramThree}
+
+    Highcharts.chart('containerThree', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: '收入模块分类占比'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: newShouGroup
+        }]
+    });
+
+    //饼状图 4支出
+    var newZhiGroup ={$HistogramFour}
+
+    Highcharts.chart('containerFour', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: '支出模块分类占比'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: newZhiGroup
+        }]
+    });
+</script>
+
+<script>
+    var HistogramPay ={$HistogramPay};
+
+    var chart = Highcharts.chart('containerYuan', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '收支模块不同支付方式条形图'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: ['收入', '支出'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '金额总量 (元)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' 元'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    allowOverlap: true // 允许数据标签重叠
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        series: HistogramPay
+    });
+</script>
+
+<script>
+
+    var HistogramFourZhi ={$HistogramFourZhi};
+    var HistogramFourShou ={$HistogramFourShou};
+    var chart = Highcharts.chart('containersds', {
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: '收支月折线图'
+        },
+        xAxis: {
+            categories: ['一月', '二月', '三月', '四月', '五月', '六月',
+                '七月', '八月', '九月', '十月', '十一月', '十二月']
+        },
+        yAxis: {
+            title: {
+                text: '价格'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value ;
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: '收入',
+            marker: {
+                symbol: 'square'
+            },
+            data: HistogramFourShou
+        }, {
+            name: '支出',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: HistogramFourZhi
+        }]
+    });
+
+</script>

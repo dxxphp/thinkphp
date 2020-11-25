@@ -1,0 +1,142 @@
+{include file="public/menu" /}
+
+
+<body class="sidebar-fixed sidebar-dark header-light header-fixed" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+
+        {include file="public/header" /}
+        <form action="{:url('home/user/edit')}"   enctype="multipart/form-data" method="post">
+        <div class="content-wrapper">
+            <div class="content">							<div class="row">
+
+                <!--<form action="{:url('home/user/edit')}"   enctype="multipart/form-data" method="post">-->
+
+                    <div class="col-lg-6">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>完善个人信息</h2>
+                            </div>
+                            <div class="card-body">
+                                <label class="text-dark font-weight-medium" for="">用户名</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+													<span class="input-group-text">
+														<i class="mdi mdi-calendar-range"></i>
+													</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="username" data-mask="" placeholder="" aria-label="" value="{$data.username}" required>
+                                </div>
+
+                                <label class="text-dark mt-4 font-weight-medium" for="">设置密码</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+													<span class="input-group-text">
+														<i class="mdi mdi-security-account-outline"></i>
+													</span>
+                                    </div>
+                                    <input type="password" class="form-control" name="password" data-mask=""  value="<?php echo base64_decode($data['password']) ?>" placeholder="" aria-label="" required>
+                                </div>
+                                <label class="text-dark mt-4 font-weight-medium" for="">手机号</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+													<span class="input-group-text">
+														<i class="mdi mdi-phone"></i>
+													</span>
+                                    </div>
+                                    <input type="number" class="form-control" name="tell" data-mask="" value="{$data.tell}" placeholder="" aria-label="" required>
+                                </div>
+
+                                <label class="text-dark mt-4 font-weight-medium" for="">邮箱</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+													<span class="input-group-text">
+														<i class="mdi mdi-security-account-outline"></i>
+													</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="email" data-mask="" value="{$data.email}" placeholder="" aria-label="" required>
+                                </div>
+                                <label class="text-dark mt-4 font-weight-medium" for="">身份证号</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+													<span class="input-group-text">
+														<i class="mdi mdi-eye"></i>
+													</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="card_id" data-mask="" value="{$data.card_id}" placeholder="" aria-label="" required>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+
+                                    <label class="text-dark mb-2 mt-4 font-weight-medium d-inline-block mr-3" for="">sex</label>
+                                    <ul class="list-unstyled list-inline" >
+                                        <li class="d-inline-block mr-3">
+                                            <label class="control control-radio"> 男
+                                                <input type="radio" name="sex" value="1" <?php if($data['sex'] == 1){?>checked="checked"<?php } ?>  />
+                                                <div class="control-indicator"></div>
+                                            </label>
+                                        </li>
+                                        <li class="d-inline-block mr-3">
+                                            <label class="control control-radio"> 女
+                                                <input type="radio" name="sex"  value="2" <?php if($data['sex'] == 2){?>checked="checked"<?php } ?> >
+                                                <div class="control-indicator"></div>
+                                            </label>
+                                        </li>
+                                    </ul>
+
+                                    <label class="text-dark mt-4 font-weight-medium" for="">头像</label>
+
+                                    <?php if(!empty($data['photo'])) { ?>
+                                    <img style="width: 100px;height: 60px;" src="__ROOT__{$data.photo}" alt="">
+                                    <input type="hidden" class="form-control" value="{$data.photo}"  name="photo"  aria-describedby="inputGroupPrepend3">
+                                    <input type="file" class="form-control"  name="image"  aria-describedby="inputGroupPrepend3">
+                                    <?php } else { ?>
+                                    <input type="file" class="form-control"  name="image"  aria-describedby="inputGroupPrepend3">
+                                    <?php } ?>
+
+                                    <label class="text-dark mt-4 font-weight-medium" for="">简介</label>
+                                    <div class="input-group mb-2">
+
+                                        <textarea style="height: 120px;" name="remark" type="text" class="form-control" data-mask="" placeholder="" aria-label="">{$data.remark}</textarea>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">提交表单</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            </div>
+</form>
+
+
+
+        </div>    </div>
+</div>
+</body>
+</html>

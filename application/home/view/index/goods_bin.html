@@ -1,0 +1,221 @@
+{include file="public/menu" /}
+
+
+<body class="header-fixed sidebar-fixed sidebar-dark header-light" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+    <style>
+
+        .pages{float: right}
+        .pages a,.pages span {
+            display:inline-block;
+            padding:20px 20px;
+            border:1px solid #f0f0f0;
+            -webkit-border-radius:3px;
+            -moz-border-radius:3px;
+            border-radius:30px;
+            font-size: 14px;
+        }
+        .pages a,.pages li {
+
+            display:inline-block;
+            list-style: none;
+            text-decoration:none; color:#58A0D3;
+        }
+        .pages a.first,.pages a.prev,.pages a.next,.pages a.end{
+            margin:0 auto;
+        }
+        .pages a:hover{
+            border-color:#50A8E6;
+        }
+        .pages span.current{
+            background:#50A8E6;
+            color:#FFF;
+            font-weight:700;
+            border-color:#50A8E6;
+        }
+
+    </style>
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+    <div class="page-wrapper">
+        <!-- Header -->
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="breadcrumb-wrapper">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item">  </li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{:url('home/index/add')}">添加物品</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/index/goods')}">物品列表</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/index/goodsBin')}">物品回收站</a>
+                        </li>
+                    </ol>
+                </nav>
+
+            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Recent Order Table -->
+                        <div class="card card-table-border-none" id="recent-orders">
+                            <form>
+                            <div class="card-header justify-content-between">
+                                <!--<h2>列表展示</h2>-->
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+
+                                </div>
+                                <div >
+                                </div>
+                                <div >
+                                <input type="text" class="form-control" id="validationServer01" placeholder="物品名称" name="username" value="<?php echo !empty($username) ? $username : '';?>" >
+                            </div>
+                                <div>
+                                    <!--<label for="validationServer02">分类</label>-->
+                                    <select class="form-control" name="class" id="validationServer02">
+                                        <option value="<?php echo !empty($search['class']) ? $classData[$search['class']]['id'] : ''; ?>">
+                                            <?php echo !empty($search['class']) ? $classData[$search['class']]['classname'] : '请选择'; ?>
+                                        </option>
+                                        <?php if(!empty($search['class'])) { ?>
+                                        <option value ="" >请选择</option>
+                                        <?php } ?>
+
+                                        {foreach name="classData" item="value"}
+                                        <option value ="{$value.id}" >{$value.classname}</option>
+                                        {/foreach}
+
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" >查询</button>
+
+                            </div>
+                            </form>
+                            <div class="card-body pt-0 pb-5">
+                                <table class="table">
+                                    <thead>
+                                    <tr style="color: #0e121f;">
+                                        <th style="color: #0e121f;">ID</th>
+                                        <th style="color: #0e121f;">唯一单号</th>
+                                        <th style="color: #0e121f;">物品名称</th>
+                                        <th style="color: #0e121f;">分类</th>
+                                        <th style="color: #0e121f;" class="d-none d-md-table-cell">价格</th>
+                                        <th style="color: #0e121f;" class="d-none d-md-table-cell">购买时间</th>
+                                        <th style="color: #0e121f;">照片</th>
+                                        <th style="color: #0e121f;">添加时间</th>
+                                        <th ></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {foreach name="list.data" item="value">
+                                    <tr class="table table-dark">
+                                        <td style="color: #0e121f;">{$value.id}</td>
+                                        <td style="color: #0e121f;">{$value.onlyid}</td>
+                                        <td style="color: #0e121f;" class="d-none d-md-table-cell">{$value.username}</td>
+                                        <td  style="color: #0e121f;"class="d-none d-md-table-cell">
+                                            <?php if(!empty($classData[$value['class']]['classname'])) { ?>
+                                            <?= $classData[$value['class']]['classname']; ?>
+                                            <?php }else{ ?>
+                                            暂无分类
+                                            <?php } ?>
+                                        </td>
+
+                                        <td style="color: #0e121f;" class="d-none d-md-table-cell">
+                                            <?php if(!empty($value['price'])) { ?>
+                                            {$value.price} /元
+                                            <?php } else { ?>
+                                            暂无价格
+                                            <?php } ?>
+                                        </td>
+
+                                        <td  style="color: #0e121f;" >
+                                            <?php if(!empty($value['meeting'])) { ?>
+                                            {$value.meeting|date="Y-m-d",###}
+                                            <?php } else { ?>
+                                            暂无时间
+                                            <?php } ?>
+                                        </td>
+
+                                        <td style="color: #0e121f;" >
+                                            <?php if(!empty($value['photo'])) { ?>
+                                            <img style="width: 100px;height: 60px;" src=" __ROOT__{$value.photo}" alt="">
+                                            <?php } else { ?>
+                                            暂无
+                                            <?php } ?>
+                                        </td>
+
+                                        <td style="color: #0e121f;" >{$value.addtime|date="Y-m-d H:i:s",###}</td>
+                                        <td style="color: #0e121f;"     class="text-right">
+                                            <div class="dropdown show d-inline-block widget-dropdown">
+                                                <a class="dropdown-toggle icon-burger-mini" href="" role="button" id="dropdown-recent-order1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
+                                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-recent-order1">
+                                                    <li class="dropdown-item">
+                                                        <a href="{:url('home/index/recover')}?id={$value.id}"   class="delads">移出回收站</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                <tfoot>
+                                <!--分页显示？-->
+                                <tr><td textalign="center" cl nowrap="true" colspan="9" height="20"><div class="pages" style="color: #0f0f0f;">{$list.page}</div><h4 style="color: #0e121f;">共{$list.num}条</h4></td></tr>
+                                </tfoot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

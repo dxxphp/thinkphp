@@ -1,0 +1,617 @@
+{include file="public/menu" /}
+
+
+<body class="header-fixed sidebar-fixed sidebar-dark header-light" id="body">
+<script>
+    NProgress.configure({ showSpinner: false });
+    NProgress.start();
+</script>
+
+<div class="mobile-sticky-body-overlay"></div>
+
+<div class="wrapper">
+    <style type="text/css">
+        body{
+            margin: 0px;
+        }
+        .zhezhao{
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            background: black;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        .tankuang{
+            position: relative;
+            background: white;
+            width: 30%;
+            height: 60%;
+            border-radius: 5px;
+            margin: 5% auto;
+        }
+        #header{
+            height: 40px;
+        }
+        #header-right{
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            background: red;
+            color: black;
+            right: 5px;
+            top: 5px;
+            text-align: center;
+        }
+        
+    </style>
+    <style>
+
+        .pages{float: right}
+        .pages a,.pages span {
+            display:inline-block;
+            padding:20px 20px;
+            border:1px solid #f0f0f0;
+            -webkit-border-radius:3px;
+            -moz-border-radius:3px;
+            border-radius:30px;
+            font-size: 14px;
+        }
+        .pages a,.pages li {
+
+            display:inline-block;
+            list-style: none;
+            text-decoration:none; color:#58A0D3;
+        }
+        .pages a.first,.pages a.prev,.pages a.next,.pages a.end{
+            margin:0 auto;
+        }
+        .pages a:hover{
+            border-color:#50A8E6;
+        }
+        .pages span.current{
+            background:#50A8E6;
+            color:#FFF;
+            font-weight:700;
+            border-color:#50A8E6;
+        }
+
+    </style>
+
+
+    <!--
+====================================
+——— LEFT SIDEBAR WITH FOOTER
+=====================================
+-->
+    {include file="public/left" /}
+
+
+    <div class="page-wrapper" id="page-wrapper">
+        <!-- Header -->
+        {include file="public/header" /}
+
+        <div class="content-wrapper">
+            <div class="content">						<div class="breadcrumb-wrapper">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb p-0">
+                        <li class="breadcrumb-item">  </li>
+                        <li class="breadcrumb-item" aria-current="page"><a style="cursor:pointer" onclick="dianwo()">添加产品</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/product/index')}">产品列表</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/shop/shop')}">购物车列表</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{:url('home/order/show')}">订单列表</a>
+                        </li>
+                    </ol>
+                </nav>
+
+            </div>
+                <div class="col-12">
+                    <div class="card card-default">
+                        <div class="card-body py-4">
+                            <ol class="breadcrumb p-0">
+                                <li class="breadcrumb-item">
+
+
+
+                                    <button class="btn btn-primary" onclick="empty()">清空现售价和现批价</button>
+
+                                    <button class="btn btn-primary" onclick="show()">生成现售价</button>
+
+                                    <button class="btn btn-primary" onclick="divOne()">生成现批价</button>
+
+                                    <button class="btn btn-primary" id="export">导出采购exel</button>
+
+                                    <button class="btn btn-primary" id="exportOne">导出销售exel</button>
+
+                                    <button class="btn btn-primary" id="Order" >购物车</button>
+
+                                </li>
+
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" style=" display: flex;">
+
+
+                    {foreach name="data" item="value"}
+                    <div class="col-md-4 col-lg-4" style="width: 80px;">
+                        <div class="card card-default">
+                            <div class="card-header card-header-border-bottom">
+                                <h2>{$value.classname}（{$value.count}）</h2>
+                            </div>
+                            <div class="card-body">
+                                <?php if(!empty($value['show'])) { ?>
+
+                                <table class=" table-responsive"  style="table-layer:fixed">
+                                    <thead>
+                                    <tr >
+                                        <th style="color: #0e121f;WORD-WARP:break-word" >名称</th>
+                                        <th style="color: #0e121f;">单价</th>
+                                        <th style="color: #0e121f;">批发价</th>
+                                        <th style="color: #0e121f;">现售价</th>
+                                        <th style="color: #0e121f;">现批价</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {foreach name="value.show" item="val"}
+                                    <tr>
+
+                                        <td style="color: #0e121f;" class="canChangeFive" id="{$val.id}" >{$val.product_name}</td>
+                                        <td style="color: #0e121f;"  class="canChange" id="{$val.id}">{$val.purchase}</td>
+                                        <td style="color: #0e121f;" class="canChangetwo" id="{$val.id}">{$val.new_purchase}</td>
+                                        <td style="color: #0e121f;" class="canChangeThree" id="{$val.id}">{$val.price}</td>
+                                        <td style="color: #0e121f;" class="canChangeFour" id="{$val.id}">{$val.new_price}
+
+                                        <td style="color: #0e121f;"     class="text-right">
+                                            <div class="dropdown show d-inline-block widget-dropdown">
+                                                <a class="dropdown-toggle icon-burger-mini" href="" role="button" id="dropdown-recent-order1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
+                                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-recent-order1">
+                                                    <li class="dropdown-item">
+                                                        <a href="javascript:return false;" onclick="delRelation('{$val.id}')" class="delads">删除</a>
+                                                    </li>
+                                                    <li class="dropdown-item">
+                                                        <a href="javascript:return false;" onclick="order('{$val.id}')" class="delads">加入购物车</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    {/foreach}
+
+                                    </tbody>
+                                </table>
+                                <?php } ?>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {/foreach}
+
+                </div>
+            </div>
+
+        </div>
+</div>
+
+</body>
+<div class="zhezhao" id='zhezhao'>
+    <div class="tankuang">
+        <div id="header" style="color: black;text-align: center;margin-top: 300px;font-size: 12px">
+            <!--<h3>添加产品</h3>-->
+            <form action="{:url('home/product/add')}" method="post">
+                <div class="col-md-12 mb-3" style="color: black;">
+                    <label  style="font-size: 15px;">产品名称</label>
+                    <input type="text" class="form-control"   name="product_name" placeholder="请输入产品名称" aria-describedby="inputGroupPrepend3" required>
+                </div>
+                <div class="col-md-12 mb-3" style="color: black;">
+                <label  style="font-size: 15px;">采购单价</label>
+                <input type="text" class="form-control price"   name="purchase" placeholder="请输入产品采购单价" aria-describedby="inputGroupPrepend3" required>
+            </div>
+
+                <div class="col-md-12 mb-3" style="color: black;">
+                    <label  style="font-size: 15px;">采购批发价</label>
+                    <input type="text" class="form-control price"   name="new_purchase" placeholder="请输入产品采购批发价" aria-describedby="inputGroupPrepend3" required>
+                </div>
+
+
+                <div class="col-md-12 mb-3" style="color: black;">
+                <label  style="font-size: 15px;">售价</label>
+                <input type="text" class="form-control"   name="price" placeholder="请输入产品售价（单价)" aria-describedby="inputGroupPrepend3" >
+            </div>
+
+                <div class="col-md-12 mb-3" style="color: black;">
+                    <label  style="font-size: 15px;">售批发价</label>
+                    <input type="text" class="form-control price"   name="new_price" placeholder="请输入产品售批发价" aria-describedby="inputGroupPrepend3" >
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label for="validationServer02">品牌分类</label>
+                    <select class="form-control" name="class" id="validationServer02" required>
+                        <option value="">请选择</option>
+
+                        {foreach name="classData" item="value"}
+                        <option value ="{$value.id}">{$value.classname}</option>
+                        {/foreach}
+
+                    </select>
+                </div>
+                <button class="btn btn-primary">添加商品</button>
+            </div>
+            </form>
+            <div id="header-right" onclick="hidder()">x</div>
+        </div>
+    </div>
+
+<div id="div" style="background:#0f0f0f;position:absolute;display:none;margin: auto;top:300px;left:30%;margin-top:-50px;margin-left:-250px;width:400px;height:150px;border-radius:5px;">
+    <form name="form" action="{:url('home/product/creat')}" method="post" style="color: white"><br>
+        <p>说明（全部产品）：根据单价 + 增加金额 = 现售价</p><br>
+        请输入增加金额：<input type="number"   name="price" required/><br><br>
+        <input type="hidden"   name="flag"  value="1" />
+        <input type="submit" style="margin-left: 120px;" class="btn btn-primary" value="确定"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-primary" value="取消" onclick="hidd()"/>
+    </form>
+</div>
+
+<div id="divOne" style="background:#0f0f0f;position:absolute;display:none;margin: auto;top:300px;left:38%;margin-top:-50px;margin-left:-250px;width:400px;height:150px;border-radius:5px;">
+    <form name="form" action="{:url('home/product/creat')}" method="post"  style="color: white"><br>
+        <p>说明（全部产品）：根据批发价 + 增加金额 = 现批价</p><br>
+        请输入增加金额：<input type="number"   name="new_price" required/><br><br>
+        <input type="hidden"   name="flag"  value="2" />
+
+        <input type="submit" style="margin-left: 120px;" class="btn btn-primary" value="确定"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-primary" value="取消" onclick="hidde()"/>
+    </form>
+</div>
+
+
+
+
+</div>
+</html>
+
+<script type="text/javascript">
+
+
+    function show(){
+        document.getElementById('div').style.display="block";
+        document.getElementById('divOne').style.display="none";
+    }
+    function hidd(){
+        document.getElementById('div').style.display="none";
+    }
+
+
+    function divOne(){
+        document.getElementById('divOne').style.display="block";
+        document.getElementById('div').style.display="none";
+    }
+    function hidde(){
+        document.getElementById('divOne').style.display="none";
+    }
+
+</script>
+
+<script type="text/javascript">
+    document.getElementById('zhezhao').style.display="none";
+    function dianwo(){
+        document.getElementById('zhezhao').style.display="";
+    }
+    function hidder(){
+        document.getElementById('zhezhao').style.display="none";
+    }
+
+
+    //页面修改
+    $(document).ready(function(){
+        td_Click();
+    })
+    function td_Click() {
+        $(".canChange").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:35px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/product/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 1},  // 等号前后不要加空格
+
+
+                        });
+                        td.html(newtxt);
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+
+        $(".canChangetwo").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:35px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/product/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 2},  // 等号前后不要加空格
+
+
+                        });
+                        td.html(newtxt);
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+        $(".canChangeThree").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:35px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/product/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 3},  // 等号前后不要加空格
+
+
+                        });
+                        td.html(newtxt);
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+        $(".canChangeFour").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:35px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/product/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 4},  // 等号前后不要加空格
+
+                        });
+                        td.html(newtxt);
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+
+        $(".canChangeFive").click(function () {
+            var td = $(this);
+            //所点文本框的id
+            var id = $(this).attr("id");
+            // alert(id);return
+
+            var txt = $.trim(td.text());
+
+            var input = $("<input class=\"myinput\" id='new'  type='text'value='" + txt + "'style=\"width:200px;heigth:20px;\"/>");
+            td.html(input);
+            input.click(function () {
+                return false;
+            });
+            //获取焦点
+            input.trigger("focus");
+            //文本框失去焦点后提交内容，重新变为文本
+            input.blur(function () {
+                // var newtxt = $(this).val();
+                var newtxt = $("#new").val();
+
+                // alert(newtxt);return
+                //判断文本有没有修改
+                if (newtxt != txt) {
+                    if (newtxt == null || newtxt == "") {
+                        td.html(txt);
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('home/product/update')}",
+                            data: { 'id' : id , 'purchase' : newtxt ,'flas' : 5},  // 等号前后不要加空格
+
+
+                        });
+                        td.html(newtxt);
+                    }
+                }
+                else {
+                    td.html(txt);
+                }
+            });
+        });
+    }
+
+    //删除操作
+    function delRelation( id ){
+        var id = id;
+
+        if (id == '') {
+            alert("操作失败！");return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{:url('home/product/update')}",
+            data: { 'id' : id , 'status' : 2 },  // 等号前后不要加空格
+            success: function(msg){  //请求成功后的回调函数
+                alert(msg);
+                location.replace(location)
+            }
+
+        });
+    }
+
+    //加入购物车
+    function order( id ){
+        var id = id;
+
+        if (id == '') {
+            alert("操作失败！");return false;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{:url('home/shop/shopAdd')}",
+            data: { 'id' : id },  // 等号前后不要加空格
+            success: function(msg){  //请求成功后的回调函数
+                alert(msg);
+            }
+
+        });
+    }
+
+    //清空现售价和现批价
+    function empty(  ){
+
+        if(window.confirm('你确定清空现售价和现批价吗？')){
+            $.ajax({
+                type: "POST",
+                url: "{:url('home/product/clean')}",
+                success: function(msg){  //请求成功后的回调函数
+
+                    if(msg == '200'){
+
+                    }else{
+                        alert(msg);
+                    }
+                    location.replace(location)
+                }
+
+            });
+
+        }else{
+            //alert("取消");
+            return false;
+        }
+
+    }
+
+    //导出
+    $('#export').on("click",function(){
+
+        if(window.confirm('你确定继续执行导出程序？')){
+
+        window.location.href= "{:url('home/product/excel')}"
+
+        }
+    });
+
+    //进入购物车
+    $('#Order').on("click",function(){
+
+        window.location.href= "{:url('home/shop/shop')}"
+
+
+    });
+
+</script>

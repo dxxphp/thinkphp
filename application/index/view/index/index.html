@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><{$Think.config.seo_title}></title>
+    <meta name="keywords" content="<{$Think.config.seo_keywords}>" />
+    <meta name="description" content="<{$Think.config.seo_description}>" />
+    <include file='Public:file'/>
+</head>
+<body>
+
+<include file='Public:head'/>
+
+<{:W('Flash')}>
+<script type="text/javascript">
+    $('.bxslider').bxSlider({
+        adaptiveHeight: true,
+        infiniteLoop: true,
+        hideControlOnEnd: true,
+        auto:true
+    });
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="product_head" data-move-y="-40px">
+            <h2><{$titledata.NAME1}></h2>
+            <p>
+                <span>————————————</span>
+                &nbsp;&nbsp;<{$titledata.NAME2}>&nbsp;&nbsp;
+                <span>————————————</span>
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="product_list">
+                <{:W('List',array('table'=>'Product','bid'=>1,'id'=>1))}>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tabs_bg">
+    <div class="container">
+        <div class="row">
+            <div class="tabs_head" data-move-y="-40px">
+                <h2><{$titledata.NAME5}></h2>
+                <p>
+                    <span>————————————</span>
+                    &nbsp;&nbsp;<{$titledata.NAME6}>&nbsp;&nbsp;
+                    <span>————————————</span>
+                </p>
+            </div>
+            <{:W('Flash',array('type'=>'adv'))}>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="case_head" data-move-y="-40px">
+                <h2><{$titledata.NAME3}></h2>
+                <p>
+                    <span>————————————</span>
+                    &nbsp;&nbsp;<{$titledata.NAME4}>&nbsp;&nbsp;
+                    <span>————————————</span>
+                </p>
+            </div>
+            <div class="case_list">
+                <{:W('List',array('table'=>'Photo','bid'=>15,'id'=>15))}>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="about_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="about_head" data-move-y="-40px">
+                    <h2><{$titledata.NAME11}></h2>
+                    <p>
+                        <span>————————————</span>
+                        &nbsp;&nbsp;<{$titledata.NAME12}>&nbsp;&nbsp;
+                        <span>————————————</span>
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 js_about_left" data-move-y="-40px">
+                    <h3 class="about_h3"><{$titledata.NAME13}></h3>
+                    <p class="about_p"><{$titledata.NAME14}></p>
+                    <{:W('About',array('id'=>25,'len'=>160))}>
+                    <a href="<{:W('Listhref',array('id'=>25))}>" class="about_btn">了解更多</a>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 js_about_right" data-move-y="40px">
+                    <video class="about_video" poster="" controls>
+                        <source src="<{$Think.config.web_video}>" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="news_head" data-move-y="-40px">
+                <h2><{$titledata.NAME7}></h2>
+                <p>
+                    <span>————————————</span>
+                    &nbsp;&nbsp;<{$titledata.NAME8}>&nbsp;&nbsp;
+                    <span>————————————</span>
+                </p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3 class="news_h3"><{$titledata.NAME9}></h3>
+                <{:W('List',array('table'=>'New','bid'=>2,'id'=>12,'moban'=>'index_new'))}>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3 class="news_h3"><{$titledata.NAME10}></h3>
+                <{:W('List',array('table'=>'New','bid'=>2,'id'=>39,'moban'=>'answer'))}>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="cooperation_head" data-move-y="-40px">
+                <h2><{$titledata.NAME15}></h2>
+                <p>
+                    <span>————————————</span>
+                    &nbsp;&nbsp;<{$titledata.NAME16}>&nbsp;&nbsp;
+                    <span>————————————</span>
+                </p>
+            </div>
+            <{:W('Link',array('type'=>2))}>
+        </div>
+    </div>
+</div>
+
+<script src="../Public/js/jquery.smoove.min.js"></script>
+<script>$('.product_head,.product_img,.left_nav,.case_head,.case_img,.tabs_head,.tabs_btn,.news_ul,.answer_ul,.about_head,.js_about_left,.js_about_right,.cooperation_head,.cooperation_img').smoove({offset:'10%'});</script>
+
+<include file='Public:foot'/>
+
+<{:W('Link',array('type'=>1))}>
+<{:W('Tags')}>
+
+</body>
+</html>
