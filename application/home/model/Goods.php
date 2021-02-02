@@ -42,7 +42,7 @@ class Goods extends Model
      * @author duxinxin
      * @date 2020/04/26
      */
-     public function  counts(){
+     public function  counts($condition){
 
          $condition['state'] = Config::get('STATE_YES');
          return   Db::table('goods')->where($condition)->count('id'); //查询集合总数
@@ -59,6 +59,7 @@ class Goods extends Model
     public function  goodsPriceGroup(){
         $condition = [
             'state' => Config::get('STATE_YES'),
+            'user_id' => session('admin_id'),
         ];
         return Db::table('goods') ->field("sum(price) as price,class")
             ->where($condition)
@@ -75,7 +76,7 @@ class Goods extends Model
      * @author duxinxin
      * @date 2020/04/26
      */
-    public function  goodsPrice(){
+    public function  goodsPrice($condition){
 
         $condition['state'] = Config::get('STATE_YES');
         return   Db::table('goods')->where($condition)->sum('price'); //查询集合总数

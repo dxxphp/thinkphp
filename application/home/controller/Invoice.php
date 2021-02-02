@@ -72,6 +72,8 @@ class Invoice extends Common
 
                 'username' => $postData['username'],
 
+                'user_id' => session('admin_id'),
+
                 'class'    => $postData['class'],
 
                 'price'    => $postData['price'],

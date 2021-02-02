@@ -17,15 +17,39 @@ use app\home\model\User as UserModel;
 class Common extends Controller
 {
 
+    const time = 3600;
+
     protected $redis;
     public function _initialize()
     {
 
+        $redis = self::redisMain();
+        $token = md5(session('admin_id'));
+        $data = unserialize($redis->get($token));
+
+       if(empty($data)){
+
+           return $this->error('您没有登陆',url('Login/index'));
+
+       }
+        //判断有无admin_username这个session，如果没有，跳转到登陆界面
+//        if(!session('admin_id')){
+//
+//            return $this->error('您没有登陆',url('Login/index'));
+//
+//        }
+//
+//        if (time() - session('session_start_time') > self::time) {
+//            session_destroy();//真正的销毁在这里！
+//            $this->redirect(url('Login/index'));
+//        }
+
+
         $redisVice = self::redisVice();
-        $data = $redisVice->hGetAll('user'.'1');
+        $data = $redisVice->hGetAll('user'.session('admin_id'));
         if(empty($data)){
             $UserModel = new UserModel();
-            $data =  $UserModel->UserFind(['id' => '1']);
+            $data =  $UserModel->UserFind(['id' => session('admin_id')]);
         }
         $this ->assign([
             'user'       => $data

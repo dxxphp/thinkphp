@@ -6,7 +6,7 @@ use app\home\model\Goods as GoodsModel;
 use app\home\model\Invoice as InvoiceModel;
 use app\home\model\Pay as PayModel;
 use app\home\controller\Common;
-
+use \think\db;
 
 class imgHelper
 {
@@ -70,6 +70,63 @@ class imgHelper
 
     }
 
+    public function  getPvCount(){
+
+
+        $arr = Db::table('pv')
+            ->field(['user','index','goodList','goodsAdd','goodsEdit','goodsBin','goodsPhoto','payList','payAdd','payEdit','payBin','invoiceList','invoiceAdd','invoiceEdit','invoiceBin','invoicePhoto','cateList','cateAdd','cateEdit','cateBin'])
+            ->select();
+
+        $cateBin = $cateEdit  = $cateAdd  = $cateList  = $invoicePhoto = $invoiceBin  = $invoiceEdit = $invoiceAdd = $invoiceList = $payBin = $payEdit = $payAdd = $payList = $goodsPhoto = $goodsBin = $goodsEdit=$goodsAdd=$user = $index = $goodList = 0;
+        foreach($arr as $key => $value){
+
+            $user  += $value['user'];
+            $index  += $value['index'];
+            $goodList  += $value['goodList'];
+            $goodsAdd  += $value['goodsAdd'];
+            $goodsEdit  += $value['goodsEdit'];
+            $goodsBin  += $value['goodsBin'];
+            $goodsPhoto  += $value['goodsPhoto'];
+            $payList  += $value['payList'];
+            $payAdd  += $value['payAdd'];
+            $payEdit  += $value['payEdit'];
+            $payBin  += $value['payBin'];
+            $invoiceList  += $value['invoiceList'];
+            $invoiceAdd  += $value['invoiceAdd'];
+            $invoiceEdit  += $value['invoiceEdit'];
+            $invoiceBin  += $value['invoiceBin'];
+            $invoicePhoto  += $value['invoicePhoto'];
+            $cateList  += $value['cateList'];
+            $cateAdd  += $value['cateAdd'];
+            $cateEdit  += $value['cateEdit'];
+            $cateBin  += $value['cateBin'];
+
+        }
+
+        return [
+            'user' => $this->getPv('pv::user') + $user,
+            'index' => $this->getPv('pv::index') + $index,
+            'goodList' => $this->getPv('pv::goodList') + $goodList,
+            'goodsAdd' => $this->getPv('pv::goodsAdd') + $goodsAdd,
+            'goodsEdit' => $this->getPv('pv::goodsEdit') + $goodsEdit,
+            'goodsBin' => $this->getPv('pv::goodsBin') + $goodsBin,
+            'goodsPhoto' => $this->getPv('pv::goodsPhoto') + $goodsPhoto,
+            'payList' => $this->getPv('pv::payList') +$payList ,
+            'payAdd' => $this->getPv('pv::payAdd') + $payAdd,
+            'payEdit' => $this->getPv('pv::payEdit') + $payEdit,
+            'payBin' => $this->getPv('pv::payBin')+ $payBin,
+            'invoiceList' => $this->getPv('pv::invoiceList')+ $invoiceList,
+            'invoiceAdd' => $this->getPv('pv::invoiceAdd') +$invoiceAdd,
+            'invoiceEdit' => $this->getPv('pv::invoiceEdit') + $invoiceEdit,
+            'invoiceBin' => $this->getPv('pv::invoiceBin') + $invoiceBin,
+            'invoicePhoto' => $this->getPv('pv::invoicePhoto') + $invoicePhoto,
+            'cateList' => $this->getPv('pv::cateList') + $cateList,
+            'cateAdd' => $this->getPv('pv::cateAdd') + $cateAdd,
+            'cateEdit' => $this->getPv('pv::cateEdit') + $cateEdit,
+            'cateBin' => $this->getPv('pv::cateBin') + $cateBin,
+        ];
+    }
+
 
     /**
      *  公共图片上传方法
@@ -79,13 +136,12 @@ class imgHelper
     public function getPhotoUrl($file, $url)
     {
         $info = $file->validate(['ext'=>"jpg,jpeg,png,gif"])->move(ROOT_PATH . 'public' . DS . $url);
-
-        if($info){
-            $vphotograph = $info->getSaveName();
-            //压缩
-            $image = \think\Image::open($info);
-            $image -> thumb(800,800)->save($url.'/'.$vphotograph);
-        }
+//        if($info){
+//            $vphotograph = $info->getSaveName();
+//            //压缩
+//            $image = \think\Image::open($info);
+//            $image -> thumb(800,800)->save($url.'/'.$vphotograph);
+//        }
         // 拼接url传递到数据库
         $photo = DS . $url . DS . $info->getSaveName();
         return $photo;
@@ -215,7 +271,53 @@ class imgHelper
         }
 
         $condition['state'] = $state;
+        $condition['user_id'] = session('admin_id');
 
+
+        return $params =  [
+            'where'    => $condition,
+            'classname'=>  !empty($classname)? $classname:'',
+            'username' => !empty($username)? $username:'',
+        ];
+    }
+
+
+    /**
+     *  分类 专用 搜索查询构建器 （所以搜索用）
+     *
+     *
+     * @method getMode
+     */
+    public static function productBuild_cate($params, $state)
+    {
+
+        $condition = [];
+        if (!empty($params['username'])) {
+            $username = trim($params['username']);
+        }
+        if (!empty($params['classname'])) {
+            $classname = trim($params['classname']);
+        }
+        if (!empty($params['diff'])) {
+            $condition['diff'] = trim($params['diff']);
+        }
+        if (!empty($params['cate'])) {
+            $condition['pay_cate'] = trim($params['cate']);
+        }
+        if (!empty($params['mode'])) {
+            $condition['pay_mode'] = trim($params['mode']);
+        }
+        if (!empty($params['class'])) {
+            $condition['class'] = trim($params['class']);
+        }
+        if (!empty($params['addtime']) and !empty($params['endtime'])) {
+            $addtime = strtotime($params['addtime']);
+            $endtime = strtotime($params['endtime']);
+            $condition['addtime'] = $addtime;
+            $condition['endtime'] = $endtime;
+        }
+
+        $condition['state'] = $state;
 
         return $params =  [
             'where'    => $condition,
@@ -236,12 +338,24 @@ class imgHelper
 
         $total = $goodPrice + $invoicePrice + $payShou + $payZhi;
 
-        $list = [
-            ['name' => '物品模块','y' => round($goodPrice/$total*100),'drilldown' => '物品模块'],
-            ['name' => '小票模块','y' => round($invoicePrice/$total*100),'drilldown' => '小票模块'],
-            ['name' => '收入模块','y' => round($payShou/$total*100),'drilldown' => '收入模块'],
-            ['name' => '支出模块','y' => round($payZhi/$total*100),'drilldown' => '支出模块'],
-        ];
+        if($total != 0){
+
+            $list = [
+                ['name' => '物品模块','y' => round($goodPrice/$total*100),'drilldown' => '物品模块'],
+                ['name' => '小票模块','y' => round($invoicePrice/$total*100),'drilldown' => '小票模块'],
+                ['name' => '收入模块','y' => round($payShou/$total*100),'drilldown' => '收入模块'],
+                ['name' => '支出模块','y' => round($payZhi/$total*100),'drilldown' => '支出模块'],
+            ];
+        }else{
+
+            $list = [
+                ['name' => '物品模块','y' => 0,'drilldown' => '物品模块'],
+                ['name' => '小票模块','y' => 0,'drilldown' => '小票模块'],
+                ['name' => '收入模块','y' => 0,'drilldown' => '收入模块'],
+                ['name' => '支出模块','y' => 0,'drilldown' => '支出模块'],
+            ];
+        }
+
 
         //物品处理
         $GoodsModel = new GoodsModel();
@@ -324,11 +438,19 @@ class imgHelper
             ];
 
        }
-       //根据比例排序
+
+        //根据比例排序
         foreach ($newData as $key => $row) {
             $volume[]  = $row['y'];
         }
-        array_multisort($volume, SORT_DESC, $newData);
+
+
+        if(count($newData) > 2){
+
+            array_multisort($volume, SORT_DESC, $newData);
+
+        }
+
         return $newData;
     }
 
@@ -476,7 +598,13 @@ class imgHelper
         foreach ($newData as $key => $row) {
             $volume[]  = $row['y'];
         }
-        array_multisort($volume, SORT_DESC, $newData);
+
+        if(count($newData) > 2){
+
+            array_multisort($volume, SORT_DESC, $newData);
+
+        }
+
         return $newData;
     }
 
@@ -487,24 +615,29 @@ class imgHelper
      *  公共方法
      * @method HistogramThree
      */
-    public   function HistogramThree(){
+    public  function HistogramThree($year = ''){
+
+        $time = [];
+        if($year){
+            $time = $this->getYear($year);
+        }
 
         //收入处理
         $PayModell = new PayModel();
         //微信
-        $shouPriceW =  $PayModell->payPriceCate(Config::get('PAY_SHOU'), Config::get('WECHAT'));
+        $shouPriceW =  $PayModell->payPriceCate($time,Config::get('PAY_SHOU'), Config::get('WECHAT'));
         //支付宝
-        $shouPriceP =  $PayModell->payPriceCate(Config::get('PAY_SHOU'), Config::get('PAY'));
+        $shouPriceP =  $PayModell->payPriceCate($time,Config::get('PAY_SHOU'), Config::get('PAY'));
         //信用卡
-        $shouPriceC =  $PayModell->payPriceCate(Config::get('PAY_SHOU'), Config::get('CARD'));
+        $shouPriceC =  $PayModell->payPriceCate($time,Config::get('PAY_SHOU'), Config::get('CARD'));
 
         //支出处理
         //微信
-        $zhiPriceW =  $PayModell->payPriceCate(Config::get('PAY_ZHI'), Config::get('WECHAT'));
+        $zhiPriceW =  $PayModell->payPriceCate($time,Config::get('PAY_ZHI'), Config::get('WECHAT'));
         //支付宝
-        $zhiPriceP =  $PayModell->payPriceCate(Config::get('PAY_ZHI'), Config::get('PAY'));
+        $zhiPriceP =  $PayModell->payPriceCate($time,Config::get('PAY_ZHI'), Config::get('PAY'));
         //信用卡
-        $zhiPriceC =  $PayModell->payPriceCate(Config::get('PAY_ZHI'), Config::get('CARD'));
+        $zhiPriceC =  $PayModell->payPriceCate($time,Config::get('PAY_ZHI'), Config::get('CARD'));
 
         return  $data = [
             [
@@ -523,15 +656,25 @@ class imgHelper
 
     }
 
+
+    // 获取年的开始结束时间
+    public function getYear($year)
+    {
+
+        $time['begin'] = strtotime(date(date("$year-01-01 00:00:00",strtotime("$year -1 year"))));
+        $time['end'] = strtotime(date("$year-12-31 23:59:59", strtotime("$year -1 year")));
+
+        return $time;
+    }
+
     /**
      *  折线图（HistogramFour）
      *
      *  公共方法
      * @method HistogramFour
      */
-    public function HistogramFour(){
-      // 获取当前年份
-      $nian = date("Y");
+    public function HistogramFour($nian){
+
       $PayModell = new PayModel();
 
       //支出数据集合

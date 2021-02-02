@@ -46,6 +46,7 @@ class Pay extends Model
 
          $condition = [
              'state' => Config::get('STATE_YES'),
+             'user_id' => session('admin_id'),
              'pay_cate' => $params,
          ];         return   Db::table('pay')->where($condition)->count('id'); //查询集合总数
 
@@ -63,6 +64,7 @@ class Pay extends Model
 
             $condition = [
                 'state' => Config::get('STATE_YES'),
+                'user_id' => session('admin_id'),
                 'pay_cate' => $pay_cate,
                 'usetime' => ['between', [$params['begin'], $params['end']]]
             ];
@@ -78,12 +80,20 @@ class Pay extends Model
      * @author duxinxin
      * @date 2020/04/26
      */
-    public function  payPrice($params){
+    public function  payPrice($params, $time = ''){
+
 
         $condition = [
             'state' => Config::get('STATE_YES'),
+            'user_id' => session('admin_id'),
             'pay_cate' => $params,
         ];
+
+        if($time){
+
+            $condition['usetime'] =  ['between', [$time['addtime'], $time['endtime']]]  ;
+        }
+
         return  Db::table('pay')->where($condition)->sum('price'); //查询集合总数
 
 
@@ -96,11 +106,17 @@ class Pay extends Model
      * @author duxinxin
      * @date 2020/04/26
      */
-    public function  payPriceGroup($params){
+    public function  payPriceGroup($params , $time = ''){
         $condition = [
             'state' => Config::get('STATE_YES'),
             'pay_cate' => $params,
+            'user_id' => session('admin_id'),
+
         ];
+
+        if($time){
+            $condition['usetime'] =  ['between', [$time['addtime'], $time['endtime']]]  ;
+        }
         return Db::table('pay') ->field("sum(price) as price,class")
             ->where($condition)
             ->group('class')
@@ -116,12 +132,19 @@ class Pay extends Model
      * @author duxinxin
      * @date 2020/04/26
      */
-    public function  payPriceCate($params, $mode){
+    public function  payPriceCate($time , $params, $mode){
+
+
         $condition = [
             'state' => Config::get('STATE_YES'),
+            'user_id' => session('admin_id'),
             'pay_cate' => $params,
-            'pay_mode' => $mode
+            'pay_mode' => $mode,
         ];
+
+        if($time){
+            $condition['usetime'] =  ['between', [$time['begin'], $time['end']]]  ;
+        }
         return  Db::table('pay')->where($condition)->sum('price');
 
 
@@ -172,12 +195,13 @@ class Pay extends Model
              unset($condition['where']['addtime']);
              unset($condition['where']['endtime']);
          }
+
          //查询集合并分页
          $news = Db::table('pay')
              ->field(['id','username','class','number','pay_cate','price','remark','addtime','state','usetime','pay_mode'])
              ->whereLike('username',"%".$condition['username']."%")
              ->where($condition['where'])
-             ->order('id DESC')->paginate(Config::get('PAGE_ONE'),false,['query'=>request()->param()]);
+             ->order('usetime DESC')->paginate(Config::get('PAGE_ONE'),false,['query'=>request()->param()]);
 
          //查询数量
          $num = Db::table('pay')

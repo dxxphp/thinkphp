@@ -33,16 +33,21 @@
               <img src="__ROOT__{$user.photo}" class="img-circle" alt="User Image" />
               <div class="d-inline-block">
                 {$user.username} <small class="pt-1">{$user.email}</small>
+
               </div>
             </li>
 
 
             <li>
-            <a href="">
+            <a href="{:url('home/user/edit')}">
               <i class="mdi mdi-account"></i> {$user.remark}
             </a>
           </li>
-
+            <li>
+              <a href="{:url('home/login/logout')}">
+                <i class="mdi mdi-account"></i> 退出登陆
+              </a>
+            </li>
           </ul>
         </li>
       </ul>

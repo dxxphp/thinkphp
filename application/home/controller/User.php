@@ -44,7 +44,7 @@ class User extends Common
 
         if ($this->request->isPost()){
 
-            $id = '1';
+            $id = session('admin_id');
             $postData = $this->request->post();
             $file = request()->file('image');
             if($file){
@@ -101,6 +101,7 @@ class User extends Common
             $UserModel = new UserModel();
             $data =  $UserModel->edit($id, $Data);
             $redisMain = Common::redisMain();
+            $redisMain->hMset('user'.$id, $Data);
 
             if($data) {
                 return $this->success('修改成功', '');
@@ -110,7 +111,7 @@ class User extends Common
 
         }else{
 
-            $id = '1';
+            $id = session('admin_id');
             $redisVice = Common::redisVice();
             $data = $redisVice->hGetAll('user'.$id);
 
@@ -122,9 +123,11 @@ class User extends Common
                 $redisMain->hMset('user'.$id, $data);
 
             }
+
             //添加pv
             $imgHelper = new imgHelper();
             $imgHelper->pvConfig('pv::user', '用户页面');
+
 
             $this ->assign([
                 'data'       => $data

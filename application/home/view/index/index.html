@@ -161,49 +161,76 @@
 
                     </div>
 
-                <div class="row">
+
+            <div class="row">
                     <div class="col-xl-8 col-md-12">
                         <!-- Sales Graph -->
                         <div class="card card-default" data-scroll-height="675">
-                            <div class="card-header">
-                                <h2>收支折线图</h2>
+                            <div class="card-header" style="padding-left: 500px;">
+
+                                <select id="year">
+                                    <option value="2020" {if date("Y")==='2020'} selected = "selected"{/if}   >2020</option>
+                                    <option value="2021" {if date("Y")==='2021'} selected = "selected"{/if}   >2021</option>
+                                    <option value="2022" {if date("Y")==='2022'} selected = "selected"{/if}   >2022</option>
+
+
+                                </select>
+                                <h2> 收支折线图</h2>
                             </div>
+
                             <div class="card-body">
-                                <div id="containersds" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                                <div id="containersds" style="min-width: 310px; height: 340px; margin: 0 auto"></div>
                             </div>
+
 
                         </div>
                     </div>
                     <div class="col-xl-4 col-12">
                         <!-- Notification Table -->
-                        <div class="card card-default" data-scroll-height="550">
+                        <div class="card card-default" data-scroll-height="550" style="padding-left: 20px;">
 
+                            <div>开始时间：<input style="width: 150px; padding-left: 20px;"   id="addtime" type="date" > &nbsp;&nbsp;&nbsp;结束时间：<input  style="width: 150px; padding-left: 20px;"  id="endtime" type="date" ><button id="button" class="btn" >查询</button> </div>
                             <div id="containerFour" style=" height: 480px; "></div>
                         </div>
                     </div>
                 </div>
 
+
                 <div class="row">
                     <div class="col-xl-8 col-md-12">
                         <!-- Sales Graph -->
                         <div class="card card-default" data-scroll-height="675">
-                            <div class="card-header">
-                                <h2>收支条形图</h2>
+                            <div class="card-header" style="padding-left: 500px;">
+
+
+                                <select id="year2">
+                                    <option value="" >请选择</option>
+                                    <option value="2020" >2020</option>
+                                    <option value="2021" >2021</option>
+                                    <option value="2022"  >2022</option>
+
+                                </select>
+                                <h2>收支模块不同支付方式条形图</h2>
                             </div>
                             <div class="card-body">
-                                <div id="containerYuan" style="min-width: 310px; height: 300px; margin: 0 auto"></div>
+                                <div id="containerYuan" style="min-width: 310px; height: 340px; margin: 0 auto"></div>
                             </div>
 
                         </div>
                     </div>
                     <div class="col-xl-4 col-12">
                         <!-- Notification Table -->
-                        <div class="card card-default" data-scroll-height="550">
+                        <div class="card card-default" data-scroll-height="550" style="padding-left: 20px;">
+
+                            <div>开始时间：<input style="width: 150px; padding-left: 20px;"   id="addtime1" type="date" > &nbsp;&nbsp;&nbsp;结束时间：<input  style="width: 150px; padding-left: 20px;"  id="endtime1" type="date" ><button id="button1" class="btn" >查询</button> </div>
+
 
                             <div id="containerThree" style="height: 480px;"></div>
                         </div>
                     </div>
                 </div>
+
+
 
 
 
@@ -452,186 +479,322 @@
 
 <script>
 
+    // 收入模块分类占比
+    $("#button1").click(function () {
+
+        var addtime = $('#addtime1').val();
+        var endtime = $('#endtime1').val();
+
+        if(addtime == ''){
+            alert('请选择开始时间');return
+        }
+        if(endtime == ''){
+            alert('请选择结束时间');return
+        }
+
+
+        $.ajax({
+            url: "{:url('home/index/newGroup')}",
+            type: "GET",
+            contentType: false,
+            data: {
+                addtime : addtime,
+                endtime : endtime,
+                type : 2,
+            },
+            success: function (data) {
+
+                getQuantity4(data);
+            }
+        })
+
+    })
 
     //饼状图 3收入
     var newShouGroup ={$HistogramThree}
 
-    Highcharts.chart('containerThree', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: '收入模块分类占比'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+    getQuantity4(newShouGroup);
+
+    function getQuantity4(newShouGroup){
+
+        Highcharts.chart('containerThree', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '收入模块分类占比'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
                     }
                 }
-            }
-        },
-        series: [{
-            name: 'Brands',
-            colorByPoint: true,
-            data: newShouGroup
-        }]
-    });
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: newShouGroup
+            }]
+        });
 
+    }
+
+
+    // 支出模块分类占比
+    $("#button").click(function () {
+
+        var addtime = $('#addtime').val();
+        var endtime = $('#endtime').val();
+
+        if(addtime == ''){
+            alert('请选择开始时间');return
+        }
+        if(endtime == ''){
+            alert('请选择结束时间');return
+        }
+
+
+        $.ajax({
+            url: "{:url('home/index/newGroup')}",
+            type: "GET",
+            contentType: false,
+            data: {
+                addtime : addtime,
+                endtime : endtime,
+                type : 1,
+            },
+            success: function (data) {
+
+                getQuantity3(data);
+            }
+        })
+
+    })
     //饼状图 4支出
     var newZhiGroup ={$HistogramFour}
 
-    Highcharts.chart('containerFour', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: '支出模块分类占比'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+    getQuantity3(newZhiGroup);
+
+    function getQuantity3(newZhiGroup){
+
+        Highcharts.chart('containerFour', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: '支出模块分类占比'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
                     }
                 }
-            }
-        },
-        series: [{
-            name: 'Brands',
-            colorByPoint: true,
-            data: newZhiGroup
-        }]
-    });
-</script>
-
-<script>
-    var HistogramPay ={$HistogramPay};
-
-    var chart = Highcharts.chart('containerYuan', {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: '收支模块不同支付方式条形图'
-        },
-        subtitle: {
-            text: ''
-        },
-        xAxis: {
-            categories: ['收入', '支出'],
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: '金额总量 (元)',
-                align: 'high'
             },
-            labels: {
-                overflow: 'justify'
-            }
-        },
-        tooltip: {
-            valueSuffix: ' 元'
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true,
-                    allowOverlap: true // 允许数据标签重叠
-                }
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 100,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
-        },
-        series: HistogramPay
-    });
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: newZhiGroup
+            }]
+        });
+    }
+
 </script>
 
+<!--收支模块不同支付方式条形图-->
 <script>
+
+
+    $('#year2').change(function() {
+        //一:
+        //二:
+        var options =  $(this).val();
+
+
+        $.ajax({
+            url: "{:url('home/index/HistogramPay')}",
+            type: "GET",
+            contentType: false,
+            data: {
+                options : options
+            },
+            success: function (data) {
+                getQuantity2(data);
+            }
+        })
+    })
+
+    var HistogramPay ={$HistogramPay};
+    getQuantity2(HistogramPay)
+
+
+    function getQuantity2(HistogramPay) {
+        var chart = Highcharts.chart('containerYuan', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['收入', '支出'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '金额总量 (元)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' 元'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                        allowOverlap: true // 允许数据标签重叠
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            },
+            series: HistogramPay
+        });
+    }
+
+
+
+</script>
+
+
+<!--#收支月折线图-->
+<script>
+
+    $('#year').change(function() {
+        //一:
+        //二:
+        var options =  $(this).val();
+
+
+        $.ajax({
+            url: "{:url('home/index/HistogramFourZhi')}",
+            type: "GET",
+            contentType: false,
+            data: {
+                options : options
+            },
+             success: function (data) {
+                getQuantity(data.zhi,data.shou);
+            }
+        })
+    })
+
+
 
     var HistogramFourZhi ={$HistogramFourZhi};
     var HistogramFourShou ={$HistogramFourShou};
-    var chart = Highcharts.chart('containersds', {
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: '收支月折线图'
-        },
-        xAxis: {
-            categories: ['一月', '二月', '三月', '四月', '五月', '六月',
-                '七月', '八月', '九月', '十月', '十一月', '十二月']
-        },
-        yAxis: {
+
+    getQuantity(HistogramFourZhi,HistogramFourShou);
+    function getQuantity(HistogramFourZhi,HistogramFourShou) {
+
+
+        var chart = Highcharts.chart('containersds', {
+            chart: {
+                type: 'spline'
+            },
             title: {
-                text: '价格'
+                text: ''
             },
-            labels: {
-                formatter: function () {
-                    return this.value ;
+            xAxis: {
+                categories: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月']
+            },
+            yAxis: {
+                title: {
+                    text: '价格'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value ;
+                    }
                 }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: '收入',
                 marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        series: [{
-            name: '收入',
-            marker: {
-                symbol: 'square'
-            },
-            data: HistogramFourShou
-        }, {
-            name: '支出',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: HistogramFourZhi
-        }]
-    });
+                    symbol: 'square'
+                },
+                data: HistogramFourShou
+            }, {
+                name: '支出',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: HistogramFourZhi
+            }]
+        });
+
+
+    }
+
+
+
 
 </script>

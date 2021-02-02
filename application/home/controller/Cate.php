@@ -27,7 +27,7 @@ class Cate extends Common
     {
 
         $imgHelper = new imgHelper();
-        $condition = $imgHelper->productBuild($this->request->get(), Config::get('STATE_YES'));
+        $condition = $imgHelper->productBuild_cate($this->request->get(), Config::get('STATE_YES'));
         $GoodsModel = new GoodsModel();
         $data =  $GoodsModel->classPage($condition);
 
@@ -200,7 +200,7 @@ class Cate extends Common
     public function cateBin(){
 
         $imgHelper = new imgHelper();
-        $condition = $imgHelper->productBuild($this->request->get(), Config::get('STATE_NO'));
+        $condition = $imgHelper->productBuild_cate($this->request->get(), Config::get('STATE_NO'));
 
         $GoodsModel = new GoodsModel();
         $data =  $GoodsModel->classPage($condition);

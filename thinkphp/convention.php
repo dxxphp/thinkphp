@@ -212,6 +212,10 @@ return [
         'auto_start'     => true,
         'httponly'       => true,
         'secure'         => false,
+
+        'path'=>RUNTIME_PATH,
+
+        'expire'=>30,//过期时间
     ],
 
     // +----------------------------------------------------------------------

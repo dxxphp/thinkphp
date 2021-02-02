@@ -38,7 +38,12 @@
 
           <ul  class="collapse show"  id="dashboard" data-parent="#sidebar-menu">
             <div class="sub-menu">
+              <li >
+                <a class="sidenav-item-link" href="{:url('home/music/show')}">
+                  <span class="nav-text">音乐播放器</span>
 
+                </a>
+              </li>
               <li >
                 <a class="sidenav-item-link" href="{:url('home/wechatuser/Show')}">
                   <span class="nav-text">微信客户列表</span>
@@ -62,6 +67,8 @@
 
                 </a>
               </li>
+
+
             </div>
           </ul>
         </li>
@@ -172,9 +179,13 @@
                 <ul  class="collapse show"  id="headers">
                   <div class="sub-menu">
 
+                    <?php if($user['id'] == 1){ ?>
                     <li >
                       <a href="{:url('home/cate/index')}">分类管理</a>
                     </li>
+                    <?php } ?>
+
+
 
                     <li >
                       <a href="{:url('home/user/edit')}">个人管理</a>

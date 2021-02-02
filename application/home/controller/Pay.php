@@ -86,6 +86,8 @@ class Pay extends Common
 
                 'addtime'  => time(),
 
+                'user_id'  => session('admin_id'),
+
             ];
 
             $PayModel = new PayModel();

@@ -19,6 +19,33 @@ class Index extends Common
 {
     protected $hashFunction;
 
+
+    function king($n, $m){
+        //把n只猴子编排成 1~n 的数组
+        $monkeys = range(1, $n);
+        $i=0;
+
+        //开始报数，直到数组中只剩下一只猴子
+        while (count($monkeys)>1) {
+
+            // 1~m 往复报数，可以看成是从 1 一只往后报数
+            // 报数为 m 的倍数的数即为报数为m 的猴子
+            // 把报数为 m 的倍数的猴子从数组中踢出去
+            if(($i+1)%$m==0) {
+                unset($monkeys[$i]);
+            } else {
+                // 报数完没有被踢出的猴子把挪放到数组的最后
+                array_push($monkeys,$monkeys[$i]);
+                unset($monkeys[$i]);
+            }
+            $i++;
+        }
+        return current($monkeys);
+    }
+
+
+
+
     /**
      * 主页
      *
@@ -28,20 +55,51 @@ class Index extends Common
      */
     public function index()
     {
+
+
+//        print_r($this->ad(10,3));die;
+
+
+
+//        $file = file("url.text");
+
+//        $file_arr = array();
+//
+//        foreach($file as &$line){
+//
+//            $file_arr[] = trim($line);
+//
+//        }
+
+//print_r($file_arr);
+//        ini_set('max_execution_time', '0');
+//
+//        $time1 = time();
+//
+//        $var = 'http://chla.com.cn/htm/2020/1123/276554.html';
+//        for($i=0; $i<10000; $i++){
+//
+//            Header("Location:http://chla.com.cn/htm/2020/1208/276620.html");
+//        }
+//、
+
         $imgHelper = new imgHelper();
 //        //添加pv
         $imgHelper->pvConfig('pv::index', '主页');
         $redisMain = Common::redisMain();
-        $data = unserialize($redisMain->get('home::index'));
+        $data = unserialize($redisMain->get('home::index_'.session('admin_id')));
 
         if(empty($data)){
+
+            $condition['user_id'] = session('admin_id');
+
             $GoodsModel = new GoodsModel();
-            $goodNum = $GoodsModel->counts();
-            $goodPrice = $GoodsModel->goodsPrice();
+            $goodNum = $GoodsModel->counts($condition);
+            $goodPrice = $GoodsModel->goodsPrice($condition);
 
             $InvoiceModel = new InvoiceModel();
-            $invoiceNum = $InvoiceModel->counts();
-            $invoicePrice = $InvoiceModel->invoicePrice();
+            $invoiceNum = $InvoiceModel->counts($condition);
+            $invoicePrice = $InvoiceModel->invoicePrice($condition);
 
             $PayModel = new PayModel();
             $payShou = $PayModel->payPrice(Config::get('PAY_SHOU'));
@@ -51,13 +109,15 @@ class Index extends Common
             $payZhi = $PayModel->payPrice(Config::get('PAY_ZHI'));
             $payZhiNum = $PayModel->counts(Config::get('PAY_ZHI'));
 
+            //饼状图
+            $HistogramOne = $imgHelper->HistogramOne($goodPrice, $invoicePrice, $payShou, $payZhi);
+
 
 
             //柱状图1
             $Histogram = $imgHelper->Histogram($goodPrice, $invoicePrice, $payShou, $payZhi);
 
-            //饼状图
-            $HistogramOne = $imgHelper->HistogramOne($goodPrice, $invoicePrice, $payShou, $payZhi);
+
 
             //柱状图2
             $HistogramTwo = $imgHelper->HistogramTwo($goodPrice, $invoicePrice, $payShou, $payZhi);
@@ -66,7 +126,7 @@ class Index extends Common
             $HistogramThree = $imgHelper->HistogramThree();
 
             //折线图
-            $HistogramFour = $imgHelper->HistogramFour();
+            $HistogramFour = $imgHelper->HistogramFour(date("Y"));
 
 
             $data = [
@@ -96,9 +156,9 @@ class Index extends Common
                 'HistogramFourShou' => json_encode($HistogramFour['shou']),
             ];
 
-            $redisMain->set( 'home::index', serialize($data), 3600);
+            $redisMain->set( 'home::index_'.session('admin_id'), serialize($data), 3600);
 
-            //无缓存 把记录刷新到库
+//            无缓存 把记录刷新到库
             $getPv = $imgHelper->getPvAll();
             $getPv['addtime'] = time();
             Db::table('pv')->insert($getPv);
@@ -106,11 +166,95 @@ class Index extends Common
         }
 
         //获取所有页面pv
-        $data['getPv'] = $imgHelper->getPvAll();
+        $data['getPv'] = $imgHelper->getPvCount();
 
         $this ->assign($data);
         return $this->fetch();
     }
+
+    //查询折线图数据异步查询
+    public function HistogramFourZhi(){
+
+        $year = $this->request->get('options');
+
+        $imgHelper = new imgHelper();
+
+        $HistogramFour = $imgHelper->HistogramFour($year);
+
+        $data = [
+            'zhi' => $HistogramFour['zhi'],
+            'shou' => $HistogramFour['shou'],
+        ];
+        return json($data);
+
+    }
+
+    //收支条形图异步查询
+
+    public function HistogramPay(){
+
+        $year = $this->request->get('options');
+
+        $imgHelper = new imgHelper();
+
+        $data = $imgHelper->HistogramThree($year);
+
+        return json($data);
+
+    }
+
+
+    //收支出饼状图 异步查询
+    public function newGroup(){
+
+        $type =  $this->request->get('type');
+
+        $time['addtime'] = strtotime($this->request->get('addtime'));
+        $time['endtime'] = strtotime($this->request->get('endtime'));
+
+        $PayModell = new PayModel();
+
+        $imgHelper = new imgHelper();
+
+
+        if($type == 1){
+            //支出
+            $payZhi = $PayModell->payPrice(Config::get('PAY_ZHI'), $time);
+
+            if($payZhi){
+
+                $zhiPriceGroup =  $PayModell->payPriceGroup(Config::get('PAY_ZHI'),$time);
+
+                //合并分类名称
+                $newZhiGroup = $imgHelper->loop($zhiPriceGroup, $payZhi, Config::get('CLASS_MONEY'));
+
+                return json($newZhiGroup);
+
+            }
+
+            return json('');
+
+
+        }else{
+
+            $payShou = $PayModell->payPrice(Config::get('PAY_SHOU'), $time);
+
+            if($payShou){
+
+                //收入以分类分组查询
+                $shouPriceGroup =  $PayModell->payPriceGroup(Config::get('PAY_SHOU'),$time);
+                //合并分类名称
+                $newShouGroup = $imgHelper->loop($shouPriceGroup, $payShou, Config::get('CLASS_MONEY'));
+
+                return json($newShouGroup);
+            }
+
+            return json('');
+
+        }
+
+    }
+
 
 
     /**
@@ -176,6 +320,8 @@ class Index extends Common
                 'remark' => $postData['remark'],
 
                 'addtime' => time(),
+
+                'user_id' => session('admin_id'),
 
             ];
 
