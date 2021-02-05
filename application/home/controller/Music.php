@@ -1,10 +1,8 @@
 <?php
 namespace app\home\controller;
 
-use think\Config;
-use \think\db;
-use think\paginator\driver\Bootstrap;
-use \think\Request;
+use app\home\model\User as UserModel;
+
 
 /**
  * 音乐控制器
@@ -18,6 +16,14 @@ class Music extends Common
     const rows = 15;
     const page = 1;
 
+    // 音乐默认值
+    const for_one = 1;  //列表循环播放 默认
+    const for_two = 2;  //单曲播放
+    const for_three = 3;  //随机播放
+
+    const syns_no = 1;  //关闭音乐同步 默认
+    const syns_yes = 2;  //开启音乐同步
+
     /**
      *  音乐列表
      *
@@ -29,78 +35,91 @@ class Music extends Common
 
         $curpage = input('page') ? input('page') : self::page;//当前第x页，
 
-        $p = $this->file_url($curpage);
+        $UserModel = new UserModel();
 
-        $this->assign('page', $curpage);
+        $data =  $UserModel->UserFind(['id' => session('admin_id')]);
 
-        $this->assign('plist', $p);
+        if($data['syns'] == self::syns_yes){
 
-        $this->assign('plistpage', $p->render());
-
-        $search = $this->request->get('seach');
-
-        if($search){
-
-            $file_path="uploads/music";
-
-            $data = $this->folder_list($file_path);//遍历当前目录
-
-            $arr = [];
-            foreach ($data as $key => $val){
-
-                if($val['artist'] == $search){
-                    $arr[$key]['title'] = $val['title'];
-                    $arr[$key]['artist'] = $val['artist'];
-                    $arr[$key]['mp3'] = $val['mp3'];
-                    $arr[$key]['poster'] = $val['poster'];
-
-                }
-            }
-
-
-            $res = [
-                'data'=>array_values($arr)
-            ];
-
-            $this->assign('json',  json_encode(array_merge($res),JSON_UNESCAPED_SLASHES));//json 格式化
-
-        }else{
-            $this->assign('json',  json_encode($p,JSON_UNESCAPED_SLASHES));//json 格式化
+            $this->syns();
 
         }
 
+        $UserModel = new UserModel();
+
+        $music =  $UserModel->musicPage();
+
+        $musicAll =  $UserModel->musicAll();
+
+
+        $this->assign('fors', $data['fores']);
+        $this->assign('syns', $data['syns']);
+        $this->assign('plist', $music);
+
+        $this->assign('page', $curpage);
+
+        $this->assign('json',  json_encode($musicAll,JSON_UNESCAPED_SLASHES));//json 格式化
 
         return $this->fetch();
 
     }
 
+    //修改播放模式和同步开关
+    public function status(){
 
-    //处理音乐目录
-    public function file_url($curpage){
+        $type = $this->request->post('type');
+
+        $UserModel = new UserModel();
+
+        if($type == 1){
+
+            $fores = $this->request->post('fores');
+
+            $music =  $UserModel->edit(session('admin_id'),['fores' => $fores]);
+
+
+        }else{
+
+            $syns = $this->request->post('syns');
+
+            $music =  $UserModel->edit(session('admin_id'),['syns' => $syns]);
+
+        }
+
+        if($music){
+
+            return json("200");
+        }
+
+    }
+
+
+    //从文件夹中同步音乐到 数据库
+    public function syns(){
+
+        $UserModel = new UserModel();
 
         $file_path="uploads/music";
 
         $data = $this->folder_list($file_path);//遍历当前目录
 
 
-        $rows = self::rows;//每页显示几条记录
+        foreach($data as $key => $val){
 
-        $dataTo = array_chunk($data,$rows);
+           $artist = current(explode('.',$val['artist']));
 
-        if($dataTo){
-            $showdata = $dataTo[$curpage-1];
-        }else{
-            $showdata = null;
+
+            $find = $UserModel->musicFind(['artist' => $artist]);
+
+            if(!$find){
+
+                $val['artist'] = $artist;
+
+                $UserModel->music_Insert($val);
+
+            }
+
         }
-
-        $p = Bootstrap::make($showdata, $rows, $curpage, count($data), false, [
-            'var_page' => 'page',
-            'path'     => url('show'),//这里根据需要修改url
-            'query'    => [],
-            'fragment' => '',
-        ]);
-
-        return $p;
 
     }
 

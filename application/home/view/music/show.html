@@ -63,6 +63,17 @@
             <div class="content">
 
 
+                <div>
+                    <label><input type="radio" class="fores" name="sex" value="1"  {if $fors ==='1'} checked="checked" {/if} >列表播放</label>
+                    <label><input type="radio" class="fores" name="sex" value="2" {if $fors ==='2'} checked="checked" {/if}>单曲播放</label>
+                    <label><input type="radio" class="fores" name="sex" value="3" {if $fors ==='3'} checked="checked" {/if}>随机播放</label>
+
+                        <label><input type="radio" class="syns" name="syns" value="1" {if $syns ==='1'} checked="checked" {/if}>关闭音乐同步</label>
+                        <label><input type="radio" class="syns" name="syns" value="2" {if $syns ==='2'} checked="checked" {/if}>开启音乐同步</label>
+
+                </div>
+
+
                 <div class="rightShop" style="width: 800px; float: left;">
 
                     <div class="list">
@@ -75,7 +86,7 @@
                             </tr>
                             </thead>
                             <tbody class="body">
-                            {foreach name="plist" item="value"}
+                            {foreach name="plist.data" item="value"}
 
                             <tr>
                                 <td style="color: #0e121f;">{$value.title}</td>
@@ -91,9 +102,10 @@
                         </table>
                     </div>
 
-                    <div align="center" id="page" >
-                        {$plist->render()}
-                    </div>
+                    <tfoot>
+                    <!--分页显示？-->
+                    <tr><td textalign="center" cl nowrap="true" colspan="9" height="20"><div class="pages" style="color: #0f0f0f;">{$plist.page}</div><h4 style="color: #0e121f;">共{$plist.num}条</h4></td></tr>
+                    </tfoot>
 
                 </div>
 
@@ -107,6 +119,7 @@
                                     <div class="left">
                                         <a href="javascript:;" class="icon-shuffle"></a>
                                         <a href="javascript:;" class="icon-heart"></a>
+
                                     </div>
                                     <div class="center">
                                         <div class="jp-playlist">
@@ -164,7 +177,9 @@
 <script src='/static/music/js/jplayer.playlist.min.js'></script>
 <script>
 
-    var json = {$json}.data;
+    var json = {$json};
+    var fores = {$fors};
+    var syns = {$syns};
     $(document).ready(function(){
 
 
@@ -207,6 +222,59 @@
 
         var myPlaylist = new jPlayerPlaylist(cssSelector, playlist, options);
     }
+
+    $('.fores').on("click",function(){
+
+        var val = $(this).val();
+
+        if(fores != val){
+
+            $.ajax({
+                type: "POST",
+                url: "{:url('home/music/status')}",
+                data: {
+                    'type' : 1 ,
+                    'fores' : val ,
+
+                },  // 等号前后不要加空格
+                success: function(msg){  //请求成功后的回调函数
+
+                    if(msg == '200'){
+                        location.replace(location)
+                    }
+                }
+
+            });
+        }
+
+    });
+
+    $('.syns').on("click",function(){
+
+        var val = $(this).val();
+
+        if(syns != val){
+
+            $.ajax({
+                type: "POST",
+                url: "{:url('home/music/status')}",
+                data: {
+                    'type' : 2 ,
+                    'syns' : val ,
+
+                },  // 等号前后不要加空格
+                success: function(msg){  //请求成功后的回调函数
+
+                    if(msg == '200'){
+                        location.replace(location)
+                    }
+                }
+
+            });
+        }
+
+    });
+
 
 
 </script>

@@ -56,7 +56,6 @@ class Index extends Common
     public function index()
     {
 
-
 //        print_r($this->ad(10,3));die;
 
 

@@ -31,7 +31,7 @@ class User extends Model
      */
      public function UserFind($condition){
 
-         return   Db::table('user')->field(['id','username','photo','password','tell','sex','email','state','card_id','remark'])->where($condition)->find();
+         return   Db::table('user')->field(['id','username','photo','password','tell','sex','email','fores','syns','state','card_id','remark'])->where($condition)->find();
 
      }
 
@@ -48,5 +48,81 @@ class User extends Model
 
 
     }
+
+    /**
+     * 音乐列表添加操作
+     *
+     * @access music_Insert
+     * @author duxinxin
+     * @date 2020/04/26
+     */
+    public function music_Insert($data){
+
+        return    Db::table('music')->insert($data);
+
+    }
+
+    /**
+     * 音乐查询一条
+     *
+     * @access musicFind
+     * @author duxinxin
+     * @date 2020/04/26
+     */
+    public function musicFind($condition){
+
+
+        return   Db::table('music')->field(['id','artist'])->where($condition)->find();
+
+    }
+
+    /**
+     * 查询音乐列表集合
+     *
+     * @access classPage
+     * @author duxinxin
+     * @date 2020/04/26
+     */
+    public function  musicPage(){
+
+        //查询集合并分页
+        $news = Db::table('music')
+            ->field(['id','title','artist','mp3','poster'])
+//            ->whereLike('classname',"%".$condition['classname']."%")
+//            ->where($condition['where'])
+            ->order('id DESC')->paginate(20,false,['query'=>request()->param()]);
+
+        //查询集合数量
+        $num = Db::table('music')
+//            ->whereLike('classname',"%".$condition['classname']."%")
+//            ->where($condition['where'])
+            ->count('id');
+
+        return $show = [
+            'page'=>$news->render(),
+            'data'=>$news->all(),
+            'num' =>$num,
+        ];
+    }
+
+    /**
+     * 查询音乐全部集合
+     *
+     * @access classPage
+     * @author duxinxin
+     * @date 2020/04/26
+     */
+    public function  musicAll($condition = ''){
+
+        //查询集合
+        $arr =  Db::table('music')
+            ->field(['title','artist','mp3','poster'])
+            ->where($condition)
+            ->order('id DESC')
+            ->select();
+
+        return $arr;
+    }
+
 
 }
