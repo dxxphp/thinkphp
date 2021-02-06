@@ -49,8 +49,100 @@ class Music extends Common
 
         $music =  $UserModel->musicPage();
 
+        $seach = $this->request->get('seach');
+
         $musicAll =  $UserModel->musicAll();
 
+        if(!empty($seach)){
+
+            $musicFind =  $UserModel->musicFind(['artist' => $seach]);
+
+            $list = [];
+
+            switch ($data['fores']){
+
+                case self::for_one:
+
+                    foreach($musicAll as $key => $val){
+
+                        if($val['id'] <= $musicFind['id']){
+                           $list[$key]['title'] = $val['title'];
+                           $list[$key]['artist'] = $val['artist'];
+                           $list[$key]['mp3'] = $val['mp3'];
+                        }
+                    }
+
+
+                    break;
+                case self::for_two:
+
+                    for ($i=1; $i<=count($musicAll); $i++)
+                    {
+                        $list[$i]['title'] = $musicFind['title'];
+                        $list[$i]['artist'] = $musicFind['artist'];
+                        $list[$i]['mp3'] = $musicFind['mp3'];
+                    }
+
+
+                    break;
+
+                case self::for_three:
+
+                    shuffle($musicAll);
+                    foreach($musicAll as $key => $val){
+
+                        $list[$key]['title'] = $val['title'];
+                        $list[$key]['artist'] = $val['artist'];
+                        $list[$key]['mp3'] = $val['mp3'];
+                    }
+
+                    array_unshift($list,$musicFind);
+                    break;
+
+            }
+
+
+        }else{
+
+            switch ($data['fores']){
+
+                case self::for_one:
+
+                    foreach($musicAll as $key => $val){
+
+                        $list[$key]['title'] = $val['title'];
+                        $list[$key]['artist'] = $val['artist'];
+                        $list[$key]['mp3'] = $val['mp3'];
+
+                    }
+                    break;
+
+                case self::for_two:
+
+
+
+                    for ($i=1; $i<=count($musicAll); $i++)
+                    {
+                        $list[$i]['title'] = $musicAll[0]['title'];
+                        $list[$i]['artist'] = $musicAll[0]['artist'];
+                        $list[$i]['mp3'] = $musicAll[0]['mp3'];
+                    }
+                    break;
+
+                case self::for_three:
+
+                    shuffle($musicAll);
+                    foreach($musicAll as $key => $val){
+
+                        $list[$key]['title'] = $val['title'];
+                        $list[$key]['artist'] = $val['artist'];
+                        $list[$key]['mp3'] = $val['mp3'];
+
+                    }
+                    break;
+
+            }
+        }
 
         $this->assign('fors', $data['fores']);
         $this->assign('syns', $data['syns']);
@@ -58,7 +150,7 @@ class Music extends Common
 
         $this->assign('page', $curpage);
 
-        $this->assign('json',  json_encode($musicAll,JSON_UNESCAPED_SLASHES));//json 格式化
+        $this->assign('json',  json_encode(array_values($list),JSON_UNESCAPED_SLASHES));//json 格式化
 
         return $this->fetch();
 

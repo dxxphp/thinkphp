@@ -72,7 +72,7 @@ class User extends Model
     public function musicFind($condition){
 
 
-        return   Db::table('music')->field(['id','artist'])->where($condition)->find();
+        return   Db::table('music')->field(['id','title','artist','mp3','poster'])->where($condition)->find();
 
     }
 
@@ -116,7 +116,7 @@ class User extends Model
 
         //查询集合
         $arr =  Db::table('music')
-            ->field(['title','artist','mp3','poster'])
+            ->field(['id','title','artist','mp3','poster'])
             ->where($condition)
             ->order('id DESC')
             ->select();
